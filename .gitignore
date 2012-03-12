@@ -1,0 +1,8 @@
+build/
+*~
+*.ppm
+*.swp
+.clang_complete
+make
+tags
+
