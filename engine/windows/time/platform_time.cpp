@@ -12,7 +12,7 @@ namespace engine
 
 	//============================================================================
 
-	void CTime::Init(void)
+	void CTime::Platform_Init(void)
 	{
 		LARGE_INTEGER frequency;
 
@@ -32,6 +32,20 @@ namespace engine
 		}
 
 		::Sleep(milliseconds);
+	}
+
+	//============================================================================
+
+	const CTimeValue& CRealTimeClock::Tick(void)
+	{
+		LARGE_INTEGER time;
+		::QueryPerformanceCounter(&time);
+
+		CTimeValue lastTick(m_elapsedTime);
+		m_elapsedTime = static_cast<uint64>(time.QuadPart);
+		m_frameTime = m_elapsedTime-lastTick;
+
+		return m_frameTime;
 	}
 
 	//============================================================================
