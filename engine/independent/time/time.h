@@ -5,6 +5,11 @@
 
 namespace engine
 {
+	class ITimer;
+	class CRealTimeClock;
+	class CTimer;
+	class CTimeValue;
+
 	//============================================================================
 	// CTime
 	//============================================================================
@@ -13,9 +18,13 @@ namespace engine
 		public:
 		static void Init(void);
 		static void Sleep(uint32 microseconds);
+		static CRealTimeClock& RealTimeClock(void);
+		static CTimer& GameClock(void);
 
 	protected:
 		static void Platform_Init(void);
+		static CRealTimeClock& s_realTimeClock;
+		static CTimer& s_gameTimer;
 	};
 
 #define SECONDS_MASK 0x00000000ffffffffull
@@ -323,6 +332,16 @@ namespace engine
 				}
 
 				return paused;
+			}
+
+			void SetMaxFrameTime(CTimeValue& maxFrameTime)
+			{
+				m_maxFrameTime = maxFrameTime;
+			}
+
+			const CTimeValue& GetMaxFrameTime(void) const
+			{
+				return m_maxFrameTime;
 			}
 
 		protected:
