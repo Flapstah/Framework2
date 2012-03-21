@@ -47,12 +47,12 @@ namespace engine
 			{
 			}
 
-			CTimeValue(uint64 ticks)
+			explicit CTimeValue(uint64 ticks)
 			: m_ticks(ticks)
 			{
 			}
 
-			CTimeValue(double seconds)
+			explicit CTimeValue(double seconds)
 			: m_ticks(static_cast<uint64>(seconds*TICKS_PER_SECOND))
 			{
 			}
@@ -116,41 +116,115 @@ namespace engine
 				return *this;
 			}
 
-			const CTimeValue operator+(const CTimeValue& other)
+			const CTimeValue operator+(const CTimeValue& other) const
 			{
 				CTimeValue result(m_ticks+other.m_ticks);
 				return result;
 			}
 
-			const CTimeValue operator-(const CTimeValue& other)
+			const CTimeValue operator+(double seconds) const
+			{
+				CTimeValue result(m_ticks+(seconds*TICKS_PER_SECOND));
+				return result;
+			}
+
+			const CTimeValue operator+(uint64 ticks) const
+			{
+				CTimeValue result(m_ticks+ticks);
+				return result;
+			}
+
+			const CTimeValue operator-(const CTimeValue& other) const
 			{
 				CTimeValue result(m_ticks-other.m_ticks);
 				return result;
 			}
 
-			bool operator==(const CTimeValue& other)
+			const CTimeValue operator-(double seconds) const
+			{
+				CTimeValue result(m_ticks-(seconds*TICKS_PER_SECOND));
+				return result;
+			}
+
+			const CTimeValue operator-(uint64 ticks) const
+			{
+				CTimeValue result(m_ticks-ticks);
+				return result;
+			}
+
+			bool operator==(const CTimeValue& other) const
 			{
 				return (m_ticks == other.m_ticks);
 			}
 
-			bool operator<(const CTimeValue& other)
+			bool operator==(double seconds) const
+			{
+				return (m_ticks == seconds*TICKS_PER_SECOND);
+			}
+
+			bool operator==(uint64 ticks) const
+			{
+				return (m_ticks == ticks);
+			}
+
+			bool operator<(const CTimeValue& other) const
 			{
 				return (m_ticks < other.m_ticks);
 			}
 
-			bool operator<=(const CTimeValue& other)
+			bool operator<(double seconds) const
+			{
+				return (m_ticks < seconds*TICKS_PER_SECOND);
+			}
+
+			bool operator<(uint64 ticks) const
+			{
+				return (m_ticks < ticks);
+			}
+
+			bool operator<=(const CTimeValue& other) const
 			{
 				return (m_ticks <= other.m_ticks);
 			}
 
-			bool operator>(const CTimeValue& other)
+			bool operator<=(double seconds) const
+			{
+				return (m_ticks <= seconds*TICKS_PER_SECOND);
+			}
+
+			bool operator<=(uint64 ticks) const
+			{
+				return (m_ticks <= ticks);
+			}
+
+			bool operator>(const CTimeValue& other) const
 			{
 				return (m_ticks > other.m_ticks);
 			}
 
-			bool operator>=(const CTimeValue& other)
+			bool operator>(double seconds) const
+			{
+				return (m_ticks > seconds*TICKS_PER_SECOND);
+			}
+
+			bool operator>(uint64 ticks) const
+			{
+				return (m_ticks > ticks);
+			}
+
+			bool operator>=(const CTimeValue& other) const
 			{
 				return (m_ticks >= other.m_ticks);
+			}
+
+			bool operator>=(double seconds) const
+			{
+				return (m_ticks >= seconds*TICKS_PER_SECOND);
+			}
+
+			bool operator>=(uint64 ticks) const
+			{
+				return (m_ticks >= ticks);
 			}
 
 			double GetSeconds(void) const

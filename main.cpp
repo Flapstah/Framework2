@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
 
 	engine::CTime::Init();
 
+	/*
 	printf("sizeof(CTimeValue) is %d\n", sizeof(engine::CTimeValue));
 
 	TimeValueTest(60.0);
@@ -76,6 +77,28 @@ int main(int argc, char* argv[])
 		 	(time & HOURS_MASK) >> HOURS_SHIFT,
 		 	(time & MINUTES_MASK) >> MINUTES_SHIFT,
 		 	engine::CTimeValue::GetSeconds(time & SECONDS_MASK));
+	*/
+
+	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
+	engine::CTimeValue start(rtc.GetElapsedTime());
+	engine::CTimeValue elapsed(0.0);
+	engine::CTimeValue target(5.0);
+	engine::CTimeValue ticker(0.0);
+
+	while (elapsed < target)
+	{
+		ticker += rtc.Tick();
+
+		if (ticker >= 1.0)
+		{
+			printf("%fs elapsed\n", elapsed.GetSeconds());
+			ticker -= 1.0;
+		}
+
+		elapsed = rtc.GetElapsedTime() - start;
+	}
+
+	printf("All done.\n");
 	return 0;
 }
 

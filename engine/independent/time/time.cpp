@@ -12,6 +12,7 @@ namespace engine
 	// The max frame time gets set properly in CTime::Init()
 	static CTimeValue g_oneTick(1ull);
 	static CTimer g_gameClock(g_realTimeClock, g_oneTick, 1.0f);
+
 	CRealTimeClock& CTime::s_realTimeClock = g_realTimeClock;
 	CTimer& CTime::s_gameTimer = g_gameClock;
 
@@ -25,8 +26,11 @@ namespace engine
 	{
 		Platform_Init();
 
-		// Now that the OS ticks per second has been established, we can set the
-		// default max frame time sensibly for the game clock
+		// Now that the OS ticks per second has been established, we can seed the
+		// real time clock by ticking it...
+		g_realTimeClock.Tick();
+
+		// ...and set the default maximum frame time sensibly for the game clock
 		CTimeValue oneTenthOfASecond(0.1);
 		g_gameClock.SetMaxFrameTime(oneTenthOfASecond);
 	}
