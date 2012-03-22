@@ -12,7 +12,7 @@ namespace engine
 
 	//============================================================================
 
-	void CTime::Platform_Init(void)
+	CRealTimeClock::CRealTimeClock(void)
 	{
 		LARGE_INTEGER frequency;
 

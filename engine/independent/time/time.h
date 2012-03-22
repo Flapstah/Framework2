@@ -22,7 +22,6 @@ namespace engine
 		static CTimer& GameClock(void);
 
 	protected:
-		static void Platform_Init(void);
 		static CRealTimeClock& s_realTimeClock;
 		static CTimer& s_gameTimer;
 	};
@@ -336,10 +335,7 @@ namespace engine
 	class CRealTimeClock : public ITimer
 	{
 		public:
-			CRealTimeClock(void)
-			{
-			}
-
+			CRealTimeClock(void);
 			~CRealTimeClock(void)
 			{
 			}

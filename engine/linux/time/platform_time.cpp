@@ -14,7 +14,7 @@ namespace engine
 
 	//============================================================================
 	
-	void CTime::Platform_Init(void)
+	CRealTimeClock::CRealTimeClock(void)
 	{
 		g_platformTicksPerSecond = 1000000;
 	}

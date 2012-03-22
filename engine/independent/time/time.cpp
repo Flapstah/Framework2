@@ -16,7 +16,7 @@ namespace engine
 	CRealTimeClock& CTime::s_realTimeClock = g_realTimeClock;
 	CTimer& CTime::s_gameTimer = g_gameClock;
 
-	// Gets set properly in CTime::Platform_Init()
+	// Gets set properly in CRealTimeClock constructor
 	uint64 g_platformTicksPerSecond = 1;
 	const uint64& CTimeValue::TICKS_PER_SECOND = g_platformTicksPerSecond;
 
@@ -24,15 +24,16 @@ namespace engine
 
 	void CTime::Init(void)
 	{
-		Platform_Init();
-
-		// Now that the OS ticks per second has been established, we can seed the
-		// real time clock by ticking it...
+		// The OS ticks per second are set in CRealTimeClock's constructor, so now
+		// we can seed the real time clock by ticking it...
 		g_realTimeClock.Tick();
 
 		// ...and set the default maximum frame time sensibly for the game clock
 		CTimeValue oneTenthOfASecond(0.1);
 		g_gameClock.SetMaxFrameTime(oneTenthOfASecond);
+
+		// ...and then seed the game clock by ticking it
+		g_gameClock.Tick();
 	}
 
 	//============================================================================
@@ -56,7 +57,7 @@ namespace engine
 		if (!IsPaused())
 		{
 			CTimeValue lastTick(m_elapsedTime);
-			CTimeValue frameTime(m_scale*m_pParent->GetFrameTime().GetTicks());
+			CTimeValue frameTime(static_cast<uint64>(m_scale*m_pParent->GetFrameTime().GetTicks()));
 			if (frameTime <= m_maxFrameTime)
 			{
 				m_elapsedTime += frameTime;
