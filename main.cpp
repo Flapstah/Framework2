@@ -53,6 +53,23 @@ void TimeValueTest(double seconds)
 
 //==============================================================================
 
+bool TimerCallback(engine::CCallbackTimer* pTimer, void* pUserData)
+{
+	double elapsedSeconds = (pTimer->GetElapsedTime()).GetSeconds();
+	bool running = true;
+
+	printf("%fs elapsed\n", elapsedSeconds);
+
+	if (elapsedSeconds >= 5.0)
+	{
+		running = false;
+	}
+
+	return running;
+}
+
+//==============================================================================
+
 int main(int argc, char* argv[])
 {
 //	IGNORE_PARAMETER(argc);
@@ -79,23 +96,36 @@ int main(int argc, char* argv[])
 		 	engine::CTimeValue::GetSeconds(time & SECONDS_MASK));
 	*/
 
+	/*
 	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
-	engine::CTimeValue start(rtc.GetElapsedTime());
+	engine::CTimer& gc = engine::CTime::GameClock();
 	engine::CTimeValue elapsed(0.0);
 	engine::CTimeValue target(5.0);
 	engine::CTimeValue ticker(0.0);
 
 	while (elapsed < target)
 	{
-		ticker += rtc.Tick();
+		rtc.Tick();
+		engine::CTimeValue tick = gc.Tick();
+		ticker += tick;
+		elapsed += tick;
 
 		if (ticker >= 1.0)
 		{
 			printf("%fs elapsed\n", elapsed.GetSeconds());
 			ticker -= 1.0;
 		}
+	}
+	*/
 
-		elapsed = rtc.GetElapsedTime() - start;
+	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
+	engine::CTimeValue maxFrameTime(0.1);
+	engine::CCallbackTimer ct(rtc, maxFrameTime, 1.0f, 1.0, TimerCallback, NULL);
+
+	while (ct.IsActive())
+	{
+		rtc.Tick();
+		ct.Tick();
 	}
 
 	printf("All done.\n");
