@@ -18,3 +18,4 @@
 
 #endif // End [!defined(__PLATFORM_STDAFX_H__)]
 // [EOF]
+

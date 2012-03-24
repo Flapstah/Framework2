@@ -38,3 +38,4 @@ union mchar_t
 
 #endif // End [!defined(__PLATFORM_TYPES_H__)]
 // [EOF]
+

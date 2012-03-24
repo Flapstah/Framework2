@@ -305,8 +305,8 @@ namespace engine
 
 			void Reset(void)
 			{
-				m_elapsedTime = 0ull;
-				m_frameTime = 0ull;
+				m_elapsedTime = uint64(0);
+				m_frameTime = uint64(0);
 				m_frameCount = 0;
 			}
 
@@ -514,3 +514,4 @@ namespace engine
 //==============================================================================
 #endif // End [!defined(__TIME_H__)]
 // [EOF]
+

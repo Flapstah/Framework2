@@ -10,7 +10,7 @@ namespace engine
 
 	static CRealTimeClock g_realTimeClock;
 	// The max frame time gets set properly in CTime::Init()
-	static CTimeValue g_oneTick(1ull);
+	static CTimeValue g_oneTick(uint64(1));
 	static CTimer g_gameClock(g_realTimeClock, g_oneTick, 1.0f);
 
 	CRealTimeClock& CTime::s_realTimeClock = g_realTimeClock;
@@ -67,7 +67,7 @@ namespace engine
 		}
 		else
 		{
-			m_frameTime = 0ull;
+			m_frameTime = uint64(0);
 		}
 
 		return m_frameTime;
@@ -96,3 +96,4 @@ namespace engine
 
 //==============================================================================
 // [EOF]
+
