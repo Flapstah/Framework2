@@ -31,15 +31,24 @@ namespace engine
 
 	const CTimeValue& CRealTimeClock::Tick(void)
 	{
-		::timeval time;
-		::gettimeofday(&time, NULL);
-		
 		CTimeValue lastTick(m_elapsedTime);
-		m_elapsedTime = static_cast<double>(time.tv_sec);
-		m_elapsedTime += static_cast<uint64>(time.tv_usec);
+		m_elapsedTime = GetTime();
 		m_frameTime = m_elapsedTime-lastTick;
 
 		return m_frameTime;
+	}
+
+	//============================================================================
+
+	const CTimeValue CRealTimeClock::GetTime() const
+	{
+		::timeval time;
+		::gettimeofday(&time, NULL);
+		
+		CTimeValue currentTime(static_cast<double>(time.tv_sec));
+		currentTime += static_cast<uint64>(time.tv_usec);
+
+		return currentTime;
 	}
 
 	//============================================================================

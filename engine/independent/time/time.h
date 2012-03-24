@@ -343,6 +343,8 @@ namespace engine
 			// ITimer
 			virtual const CTimeValue& Tick(void);
 			// ~ITimer
+
+			const CTimeValue GetTime(void) const;
 	};
 
 	//============================================================================

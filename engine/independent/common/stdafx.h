@@ -15,3 +15,6 @@
 #include <time.h>
 
 #include "common/types.h"
+#include "common/macros.h"
+// [EOF]
+

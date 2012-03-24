@@ -7,13 +7,8 @@
 #include <cstring>	// for size_t
 #if !defined(_WIN32)
 #define __STDC_FORMAT_MACROS
-#include <inttypes.h> // for PRIu64 for printf(), etc.
-#else
-#define PRIX64 "I64X"
-#define PRIx64 "I64x"
-#define PRId64 "I64d"
-#define PRIu64 "I64u"
 #endif // !defined(_WIN32)
+#include <inttypes.h> // for PRIu64 for printf(), etc.
 
 //==============================================================================
 

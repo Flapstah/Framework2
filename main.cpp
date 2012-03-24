@@ -72,9 +72,9 @@ bool TimerCallback(engine::CCallbackTimer* pTimer, void* pUserData)
 
 int main(int argc, char* argv[])
 {
-//	IGNORE_PARAMETER(argc);
-//	IGNORE_PARAMETER(argv);
-	DumpArgs(argc, argv);
+	IGNORE_PARAMETER(argc);
+	IGNORE_PARAMETER(argv);
+//	DumpArgs(argc, argv);
 
 	engine::CTime::Init();
 
