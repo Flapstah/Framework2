@@ -46,6 +46,8 @@ if (WIN32)
 	# Can't seem to use find_package for GLFW or OpenAL on my Windows 7 box...
 	set(OPENAL_INCLUDE_DIR "D:/msysgit/local/include")
 	set(OPENAL_LIBRARY "D:/msysgit/local/lib/OpenAL32.lib")
+	set(FREETYPE_INCLUDE_DIRS "D:/msysgit/local/include;D:/msysgit/local/include/freetype2")
+	set(FREETYPE_LIBRARIES "D:/msysgit/local/lib/libfreetype.a")
 	set(GLFW_INCLUDE_DIR "D:/msysgit/local/include")
 	if (MSYS)
 	set(GLFW_LIBRARY "D:/msysgit/local/lib/libglfw.a")
@@ -57,7 +59,9 @@ endif (WIN32)
 if (UNIX)
 	find_package(GLFW REQUIRED)
 	find_package(OpenAL REQUIRED)
+	find_package(Freetype REQUIRED)
 endif (UNIX)
+
 
 include_directories(${PLATFORM_INCLUDES} ${GLFW_INCLUDE_DIR} ${OPENAL_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 set(LIBS ${LIBS} ${GLFW_LIBRARY} ${OPENAL_LIBRARY} ${OPENGL_LIBRARY})
