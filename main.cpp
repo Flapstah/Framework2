@@ -3,6 +3,10 @@
 #include <GL/glfw.h>
 
 #include "time/time.h"
+#include "time/realtimeclock.h"
+#include "time/timer.h"
+#include "time/callbacktimer.h"
+#include "time/timevalue.h"
 
 //==============================================================================
 

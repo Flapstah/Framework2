@@ -1,19 +1,25 @@
 #include "common/stdafx.h"
 
-#include <unistd.h>			// usleep
-#include <sys/time.h>		// gettimeofday
-
-#include "time/time.h"
-
-//==============================================================================
+#include "time/callbacktimer.h"
 
 namespace engine
 {
 	//============================================================================
 
-	void CTime::Sleep(uint32 microseconds)
+	const CTimeValue& CCallbackTimer::Tick(void)
 	{
-		::usleep(microseconds);
+		if (m_active)
+		{
+			m_ticker += PARENT::Tick();
+
+			if (m_ticker >= m_interval)
+			{
+				m_active = m_pCallback(this, m_pUserData);
+				m_ticker -= m_interval;
+			}
+		}
+
+		return m_frameTime;
 	}
 
 	//============================================================================
@@ -21,3 +27,4 @@ namespace engine
 
 //==============================================================================
 // [EOF]
+

@@ -75,15 +75,20 @@ set(LIBS ${LIBS} ${GLFW_LIBRARY} ${OPENAL_LIBRARY} ${OPENGL_LIBRARY})
 set(PLATFORM_INDEPENDENT_SOURCES
  	engine/independent/common/stdafx.cpp
 	engine/independent/time/time.cpp
+	engine/independent/time/timevalue.cpp
+	engine/independent/time/timer.cpp
+	engine/independent/time/callbacktimer.cpp
 	)
 if (WIN32)
 set(PLATFORM_SPECIFIC_SOURCES
  	engine/windows/time/platform_time.cpp
+	engine/windows/time/platform_realtimeclock.cpp
 	)
 endif (WIN32)
 if (UNIX)
 set(PLATFORM_SPECIFIC_SOURCES
  	engine/linux/time/platform_time.cpp
+	engine/linux/time/platform_realtimeclock.cpp
 	)
 endif (UNIX)
 

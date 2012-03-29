@@ -1,6 +1,8 @@
 #include "common/stdafx.h"
 
 #include "time/time.h"
+#include "time/realtimeclock.h"
+#include "time/timer.h"
 
 //==============================================================================
 
@@ -22,6 +24,14 @@ namespace engine
 
 	//============================================================================
 
+	CRealTimeClock& CTime::RealTimeClock(void)
+	{
+		return s_realTimeClock;
+	}
+
+	//============================================================================
+
+
 	void CTime::Init(void)
 	{
 		// The OS ticks per second are set in CRealTimeClock's constructor, so now
@@ -36,64 +46,9 @@ namespace engine
 
 	//============================================================================
 
-	CRealTimeClock& CTime::RealTimeClock(void)
-	{
-		return s_realTimeClock;
-	}
-
-	//============================================================================
-
 	CTimer& CTime::GameClock(void)
 	{
 		return s_gameTimer;
-	}
-
-	//============================================================================
-
-	const CTimeValue& CTimer::Tick(void)
-	{
-		if (!IsPaused())
-		{
-			if (m_pParent != NULL)
-			{
-				m_frameTime = static_cast<uint64>(m_scale*m_pParent->GetFrameTime().GetTicks());
-			}
-			else
-			{
-				m_frameTime = static_cast<uint64>(m_scale*g_realTimeClock.GetElapsedTime().GetTicks());
-			}
-
-			if (m_frameTime > m_maxFrameTime)
-			{
-				m_frameTime = m_maxFrameTime;
-			}
-
-			m_elapsedTime += m_frameTime;
-		}
-		else
-		{
-			m_frameTime = uint64(0);
-		}
-
-		return m_frameTime;
-	}
-
-	//============================================================================
-
-	const CTimeValue& CCallbackTimer::Tick(void)
-	{
-		if (m_active)
-		{
-			m_ticker += PARENT::Tick();
-
-			if (m_ticker >= m_interval)
-			{
-				m_active = m_pCallback(this, m_pUserData);
-				m_ticker -= m_interval;
-			}
-		}
-
-		return m_frameTime;
 	}
 
 	//============================================================================
