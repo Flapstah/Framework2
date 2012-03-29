@@ -14,6 +14,7 @@
 //#include <assert.h>
 #include <time.h>
 
+#include "common/config.h"
 #include "common/types.h"
 #include "common/macros.h"
 // [EOF]
