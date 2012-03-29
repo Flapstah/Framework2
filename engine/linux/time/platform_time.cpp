@@ -1,7 +1,6 @@
 #include "common/stdafx.h"
 
 #include <unistd.h>			// usleep
-#include <sys/time.h>		// gettimeofday
 
 #include "time/time.h"
 

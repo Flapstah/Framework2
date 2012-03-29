@@ -1,5 +1,7 @@
 #include "common/stdafx.h"
 
+#include <sys/time.h>		// gettimeofday
+
 #include "time/realtimeclock.h"
 
 namespace engine
