@@ -22,6 +22,18 @@ namespace engine
 
 	//============================================================================
 
+	const CTimeValue CRealTimeClock::GetCurrentTime() const
+	{
+		LARGE_INTEGER time;
+		::QueryPerformanceCounter(&time);
+
+		CTimeValue currentTime(static_cast<uint64>(time.QuadPart));
+
+		return currentTime;
+	}
+
+	//============================================================================
+
 	void CTime::Sleep(uint32 microseconds)
 	{
 		// round up to the nearest 1/2 millisecond
@@ -32,20 +44,6 @@ namespace engine
 		}
 
 		::Sleep(milliseconds);
-	}
-
-	//============================================================================
-
-	const CTimeValue& CRealTimeClock::Tick(void)
-	{
-		LARGE_INTEGER time;
-		::QueryPerformanceCounter(&time);
-
-		CTimeValue lastTick(m_elapsedTime);
-		m_elapsedTime = static_cast<uint64>(time.QuadPart);
-		m_frameTime = m_elapsedTime-lastTick;
-
-		return m_frameTime;
 	}
 
 	//============================================================================

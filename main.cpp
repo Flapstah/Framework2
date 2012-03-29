@@ -55,6 +55,8 @@ void TimeValueTest(double seconds)
 
 bool TimerCallback(engine::CCallbackTimer* pTimer, void* pUserData)
 {
+	IGNORE_PARAMETER(pUserData);
+
 	double elapsedSeconds = (pTimer->GetElapsedTime()).GetSeconds();
 	bool running = true;
 
@@ -124,7 +126,6 @@ int main(int argc, char* argv[])
 
 	while (ct.IsActive())
 	{
-		rtc.Tick();
 		ct.Tick();
 	}
 

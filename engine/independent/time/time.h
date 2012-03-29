@@ -69,7 +69,7 @@ namespace engine
 
 			CTimeValue& operator=(double seconds)
 			{
-				m_ticks = seconds*TICKS_PER_SECOND;
+				m_ticks = static_cast<uint64>(seconds*TICKS_PER_SECOND);
 				return *this;
 			}
 
@@ -87,7 +87,7 @@ namespace engine
 
 			CTimeValue& operator+=(double seconds)
 			{
-				m_ticks += seconds*TICKS_PER_SECOND;
+				m_ticks += static_cast<uint64>(seconds*TICKS_PER_SECOND);
 				return *this;
 			}
 
@@ -105,7 +105,7 @@ namespace engine
 
 			CTimeValue& operator-=(double seconds)
 			{
-				m_ticks -= seconds*TICKS_PER_SECOND;
+				m_ticks -= static_cast<uint64>(seconds*TICKS_PER_SECOND);
 				return *this;
 			}
 
@@ -280,7 +280,7 @@ namespace engine
 				Reset();
 			}
 
-			~ITimer(void)
+			virtual ~ITimer(void)
 			{
 				if (m_referenceCount != 0)
 				{
@@ -332,7 +332,7 @@ namespace engine
 	//============================================================================
 	// CRealTimeClock
 	//============================================================================
-	class CRealTimeClock : public ITimer
+	class CRealTimeClock
 	{
 		public:
 			CRealTimeClock(void);
@@ -340,11 +340,19 @@ namespace engine
 			{
 			}
 
-			// ITimer
-			virtual const CTimeValue& Tick(void);
-			// ~ITimer
+			const CTimeValue GetCurrentTime(void) const;
 
-			const CTimeValue GetTime(void) const;
+			const CTimeValue GetElapsedTime(void)
+			{
+				CTimeValue now(GetCurrentTime());
+				CTimeValue elapsed(now-m_cachedLastTime);
+				m_cachedLastTime = now;
+
+				return elapsed;
+			}
+
+		protected:
+			CTimeValue m_cachedLastTime;
 	};
 
 	//============================================================================
@@ -354,26 +362,29 @@ namespace engine
 	{
 		public:
 			CTimer(CTimer& parent, CTimeValue& maxFrameTime, float scale)
-				: m_pParent(&parent)
-				, m_maxFrameTime(m_maxFrameTime)
+				: m_maxFrameTime(maxFrameTime)
+				, m_pParent(&parent)
 				, m_scale(scale)
-				, m_parentIsRealTimeClock(false)
+				, m_paused(false)
 			{
 				m_pParent->AddReference();
 			}
 
 			CTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale)
-				: m_pParent(&parent)
-				, m_maxFrameTime(m_maxFrameTime)
+				: m_maxFrameTime(maxFrameTime)
+				, m_pParent(NULL)
 				, m_scale(scale)
-				, m_parentIsRealTimeClock(true)
+				, m_paused(false)
 			{
-				m_pParent->AddReference();
+				IGNORE_PARAMETER(parent);
 			}
 
 			~CTimer(void)
 			{
-				m_pParent->Release();
+				if (m_pParent)
+				{
+					m_pParent->Release();
+				}
 			}
 
 			// ITimer
@@ -397,12 +408,7 @@ namespace engine
 
 			bool IsPaused(void) const
 			{
-				bool paused = false;
-				if (!m_parentIsRealTimeClock)
-				{
-					paused = (m_pParent != NULL) ? reinterpret_cast<CTimer*>(m_pParent)->IsPaused() : m_paused;
-				}
-
+				bool paused = (m_pParent != NULL) ? reinterpret_cast<CTimer*>(m_pParent)->IsPaused() : m_paused;
 				return paused;
 			}
 
@@ -417,11 +423,10 @@ namespace engine
 			}
 
 		protected:
-			ITimer* m_pParent;
 			CTimeValue m_maxFrameTime;
+			ITimer* m_pParent;
 			float m_scale;
 			bool m_paused;
-			bool m_parentIsRealTimeClock;
 	};
 
 	//============================================================================

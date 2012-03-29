@@ -22,25 +22,7 @@ namespace engine
 
 	//============================================================================
 
-	void CTime::Sleep(uint32 microseconds)
-	{
-		::usleep(microseconds);
-	}
-
-	//============================================================================
-
-	const CTimeValue& CRealTimeClock::Tick(void)
-	{
-		CTimeValue lastTick(m_elapsedTime);
-		m_elapsedTime = GetTime();
-		m_frameTime = m_elapsedTime-lastTick;
-
-		return m_frameTime;
-	}
-
-	//============================================================================
-
-	const CTimeValue CRealTimeClock::GetTime() const
+	const CTimeValue CRealTimeClock::GetCurrentTime() const
 	{
 		::timeval time;
 		::gettimeofday(&time, NULL);
@@ -49,6 +31,13 @@ namespace engine
 		currentTime += static_cast<uint64>(time.tv_usec);
 
 		return currentTime;
+	}
+
+	//============================================================================
+
+	void CTime::Sleep(uint32 microseconds)
+	{
+		::usleep(microseconds);
 	}
 
 	//============================================================================
