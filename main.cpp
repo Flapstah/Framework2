@@ -80,6 +80,8 @@ int main(int argc, char* argv[])
 
 	engine::CTime::Init();
 
+	printf("Starting 5 second test...\n");
+
 	/*
 	printf("sizeof(CTimeValue) is %d\n", sizeof(engine::CTimeValue));
 

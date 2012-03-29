@@ -5,7 +5,6 @@
 
 namespace engine
 {
-	class ITimer;
 	class CRealTimeClock;
 	class CTimer;
 	class CTimeValue;
@@ -269,25 +268,72 @@ namespace engine
 	};
 
 	//============================================================================
-	// ITimer
+	// CRealTimeClock
 	//============================================================================
-	class ITimer
+	class CRealTimeClock
 	{
 		public:
-			ITimer(void)
-				:	m_referenceCount(0)
+			CRealTimeClock(void);
+			~CRealTimeClock(void)
 			{
-				Reset();
 			}
 
-			virtual ~ITimer(void)
+			const CTimeValue GetCurrentTime(void) const;
+
+			const CTimeValue GetElapsedTime(void)
 			{
+				CTimeValue now(GetCurrentTime());
+				CTimeValue elapsed(now-m_cachedLastTime);
+				m_cachedLastTime = now;
+
+				return elapsed;
+			}
+
+		protected:
+			CTimeValue m_cachedLastTime;
+	};
+
+	//============================================================================
+	// CTimer
+	//============================================================================
+	class CTimer
+	{
+		public:
+			CTimer(CTimer& parent, CTimeValue& maxFrameTime, float scale)
+				: m_maxFrameTime(maxFrameTime)
+				, m_pParent(&parent)
+				,	m_referenceCount(0)
+				, m_scale(scale)
+				, m_paused(false)
+			{
+				m_pParent->AddReference();
+			}
+
+			CTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale)
+				: m_maxFrameTime(maxFrameTime)
+				, m_pParent(NULL)
+				,	m_referenceCount(0)
+				, m_scale(scale)
+				, m_paused(false)
+			{
+				IGNORE_PARAMETER(parent);
+			}
+
+			virtual ~CTimer(void)
+			{
+				if (m_pParent)
+				{
+					m_pParent->Release();
+				}
+
 				if (m_referenceCount != 0)
 				{
-					fprintf(stderr, "[ITimer] trying to destroy a timer which is still being referenced\n");
+					fprintf(stderr, "[CTimer] trying to destroy a timer which is still being referenced\n");
 				}
 			}
-		
+
+			virtual const CTimeValue& Tick(void);
+
 			const CTimeValue& GetElapsedTime(void) const
 			{
 				return m_elapsedTime;
@@ -319,77 +365,6 @@ namespace engine
 			{
 				return --m_referenceCount;
 			}
-
-			virtual const CTimeValue& Tick(void) = 0;
-
-		protected:
-			CTimeValue m_elapsedTime;
-			CTimeValue m_frameTime;
-			uint32 m_frameCount;
-			uint32 m_referenceCount;
-	};
-	
-	//============================================================================
-	// CRealTimeClock
-	//============================================================================
-	class CRealTimeClock
-	{
-		public:
-			CRealTimeClock(void);
-			~CRealTimeClock(void)
-			{
-			}
-
-			const CTimeValue GetCurrentTime(void) const;
-
-			const CTimeValue GetElapsedTime(void)
-			{
-				CTimeValue now(GetCurrentTime());
-				CTimeValue elapsed(now-m_cachedLastTime);
-				m_cachedLastTime = now;
-
-				return elapsed;
-			}
-
-		protected:
-			CTimeValue m_cachedLastTime;
-	};
-
-	//============================================================================
-	// CTimer
-	//============================================================================
-	class CTimer : public ITimer
-	{
-		public:
-			CTimer(CTimer& parent, CTimeValue& maxFrameTime, float scale)
-				: m_maxFrameTime(maxFrameTime)
-				, m_pParent(&parent)
-				, m_scale(scale)
-				, m_paused(false)
-			{
-				m_pParent->AddReference();
-			}
-
-			CTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale)
-				: m_maxFrameTime(maxFrameTime)
-				, m_pParent(NULL)
-				, m_scale(scale)
-				, m_paused(false)
-			{
-				IGNORE_PARAMETER(parent);
-			}
-
-			~CTimer(void)
-			{
-				if (m_pParent)
-				{
-					m_pParent->Release();
-				}
-			}
-
-			// ITimer
-			virtual const CTimeValue& Tick(void);
-			// ~ITimer
 
 			void SetScale(float scale)
 			{
@@ -424,7 +399,11 @@ namespace engine
 
 		protected:
 			CTimeValue m_maxFrameTime;
-			ITimer* m_pParent;
+			CTimeValue m_frameTime;
+			CTimeValue m_elapsedTime;
+			CTimer* m_pParent;
+			uint32 m_referenceCount;
+			uint32 m_frameCount;
 			float m_scale;
 			bool m_paused;
 	};
