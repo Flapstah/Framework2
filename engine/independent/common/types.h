@@ -6,7 +6,6 @@
 #include <stdint.h> // for intX_t
 #include <cstring>	// for size_t
 #if !defined(_WIN32)
-#define __STDC_FORMAT_MACROS
 #include <inttypes.h> // for PRIu64 for printf(), etc. 
 #else
 #define PRIX64 "I64X"
