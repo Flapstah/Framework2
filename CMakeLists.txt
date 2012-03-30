@@ -73,6 +73,7 @@ set(LIBS ${LIBS} ${GLFW_LIBRARY} ${OPENAL_LIBRARY} ${OPENGL_LIBRARY})
 
 # Platform sources
 set(PLATFORM_INDEPENDENT_SOURCES
+ 	engine/independent/common/glfw.cpp
  	engine/independent/common/stdafx.cpp
 	engine/independent/time/time.cpp
 	engine/independent/time/timevalue.cpp
