@@ -33,7 +33,7 @@ namespace engine
 
 		protected:
 			CTimeValue m_cachedLastTime;
-	};
+	}; // End [class CRealTimeClock]
 
 	//============================================================================
 } // End [namespace engine]

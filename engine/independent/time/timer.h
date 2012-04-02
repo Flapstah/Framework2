@@ -127,7 +127,7 @@ namespace engine
 			uint32 m_frameCount;
 			float m_scale;
 			bool m_paused;
-	};
+	}; // End [class CTimer]
 
 	//============================================================================
 } // End [namespace engine]

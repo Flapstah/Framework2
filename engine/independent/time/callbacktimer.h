@@ -93,7 +93,7 @@ namespace engine
 			Callback m_pCallback;
 			void* m_pUserData;
 			bool m_active;
-	};
+	}; // End [class CCallbakcTimer]
 
 	//============================================================================
 } // End [namespace engine]

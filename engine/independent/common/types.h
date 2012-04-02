@@ -33,7 +33,7 @@ union mchar_t
 {
 	wchar_t	m_UTF16[_size];
 	char		m_UTF8[_size * sizeof(wchar_t)];
-};
+}; // End [union mchar_t]
 
 //==============================================================================
 

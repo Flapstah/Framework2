@@ -22,7 +22,7 @@ namespace engine
 	protected:
 		static CRealTimeClock& s_realTimeClock;
 		static CTimer& s_gameTimer;
-	};
+	}; // End [class CTime]
 
 	//============================================================================
 } // End [namespace engine]
