@@ -8,6 +8,16 @@
 #include "time/callbacktimer.h"
 #include "time/timevalue.h"
 
+#include "graphics/display.h"
+#include "input/keyboard.h"
+
+#define WINDOW_WIDTH (640)
+#define WINDOW_HEIGHT (400)
+
+#define DESIRED_FRAMERATE (10.0)
+#define FRAME_INTERVAL (1.0/DESIRED_FRAMERATE)
+engine::CTimeValue g_FrameInterval; // cannot set before CTime::Initialise()
+
 //==============================================================================
 
 void DumpArgs(int argc, char* argv[])
@@ -76,13 +86,58 @@ bool TimerCallback(engine::CCallbackTimer* pTimer, void* pUserData)
 
 //==============================================================================
 
+class CRenderer
+{
+	public:
+	CRenderer(void)
+		: m_display(WINDOW_WIDTH, WINDOW_HEIGHT, "Framework test")
+		, m_timer(engine::CTime::RealTimeClock(), g_FrameInterval, 1.0f, FRAME_INTERVAL, Callback, this)
+	{
+		for (uint32 i = 0; i < WINDOW_WIDTH*WINDOW_HEIGHT; ++i)
+		{
+			m_screen[i] = 0x00ff0000;
+		}
+	}
+
+	~CRenderer(void)
+	{
+	}
+
+	void Update(void)
+	{
+		m_timer.Tick();
+	}
+
+	protected:
+	static bool Callback(engine::CCallbackTimer* pTimer, void* pUserData)
+	{
+		CRenderer* pThis = reinterpret_cast<CRenderer*>(pUserData);
+
+		pThis->m_display.Update(&pThis->m_screen);
+
+		return true;
+	}
+
+	protected:
+	engine::CDisplay m_display;
+	engine::CCallbackTimer m_timer;
+	uint32 m_screen[WINDOW_WIDTH*WINDOW_HEIGHT];
+};
+
+//==============================================================================
+
 int main(int argc, char* argv[])
 {
 	IGNORE_PARAMETER(argc);
 	IGNORE_PARAMETER(argv);
 //	DumpArgs(argc, argv);
 
-	engine::CTime::Init();
+	engine::CKeyboard::Initialise();
+	engine::CTime::Initialise();
+
+	g_FrameInterval = FRAME_INTERVAL;
+
+	CRenderer renderer;
 
 	printf("Starting 5 second test...\n");
 
@@ -133,6 +188,7 @@ int main(int argc, char* argv[])
 	while (ct.IsActive())
 	{
 		ct.Tick();
+		renderer.Update();
 	}
 
 	printf("All done.\n");
