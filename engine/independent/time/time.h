@@ -14,7 +14,7 @@ namespace engine
 	class CTime
 	{
 		public:
-		static void Init(void);
+		static void Initialise(void);
 		static void Sleep(uint32 microseconds);
 		static CRealTimeClock& RealTimeClock(void);
 		static CTimer& GameClock(void);

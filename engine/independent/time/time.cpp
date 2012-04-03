@@ -32,7 +32,7 @@ namespace engine
 	//============================================================================
 
 
-	void CTime::Init(void)
+	void CTime::Initialise(void)
 	{
 		// The OS ticks per second are set in CRealTimeClock's constructor, so now
 		// we can seed the real time clock by calling GetElapsedTime() twice...
