@@ -1,7 +1,6 @@
 #include "common/stdafx.h"
 
-#if USING_GLFW
-
+#if USE_GLFW
 //==============================================================================
 
 #include <stdio.h>
