@@ -14,14 +14,9 @@ namespace engine
 	{
 		if (!IsPaused())
 		{
-			if (m_pParent != NULL)
-			{
-				m_frameTime = static_cast<uint64>(m_scale*m_pParent->GetFrameTime().GetTicks());
-			}
-			else
-			{
-				m_frameTime = static_cast<uint64>(m_scale*CTime::RealTimeClock().GetElapsedTime().GetTicks());
-			}
+			CTimeValue now = (m_pParent == NULL) ? CTime::RealTimeClock().GetCurrentTime() : m_pParent->GetElapsedTime();
+			m_frameTime = static_cast<uint64>(m_scale*(now-m_lastTickTime).GetTicks());
+			m_lastTickTime = now;
 
 			if (m_frameTime > m_maxFrameTime)
 			{
@@ -36,6 +31,14 @@ namespace engine
 		}
 
 		return m_frameTime;
+	}
+
+	void CTimer::Reset(void)
+	{
+		m_frameTime = uint64(0);
+		m_elapsedTime = uint64(0);
+		m_lastTickTime = (m_pParent == NULL) ? CTime::RealTimeClock().GetCurrentTime() : m_pParent->GetElapsedTime();
+		m_frameCount = 0;
 	}
 
 	//============================================================================

@@ -24,6 +24,7 @@ namespace engine
 				, m_paused(false)
 			{
 				m_pParent->AddReference();
+				Reset();
 			}
 
 			CTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale)
@@ -34,6 +35,7 @@ namespace engine
 				, m_paused(false)
 			{
 				IGNORE_PARAMETER(parent);
+				Reset();
 			}
 
 			virtual ~CTimer(void)
@@ -66,12 +68,7 @@ namespace engine
 				return m_frameCount;
 			}
 
-			void Reset(void)
-			{
-				m_elapsedTime = uint64(0);
-				m_frameTime = uint64(0);
-				m_frameCount = 0;
-			}
+			void Reset(void);
 
 			uint32 AddReference(void)
 			{
@@ -118,6 +115,7 @@ namespace engine
 			CTimeValue m_maxFrameTime;
 			CTimeValue m_frameTime;
 			CTimeValue m_elapsedTime;
+			CTimeValue m_lastTickTime;
 			CTimer* m_pParent;
 			uint32 m_referenceCount;
 			uint32 m_frameCount;

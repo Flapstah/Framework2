@@ -182,6 +182,7 @@ int main(int argc, char* argv[])
 	*/
 
 	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
+	engine::CTimeValue start = rtc.GetCurrentTime();
 	engine::CTimeValue maxFrameTime(0.1);
 	engine::CCallbackTimer ct(rtc, maxFrameTime, 1.0f, 1.0, TimerCallback, NULL);
 
@@ -191,6 +192,8 @@ int main(int argc, char* argv[])
 		renderer.Update();
 	}
 
+	engine::CTimeValue finish = rtc.GetCurrentTime();
+	printf("Total elapsed time %fs (start %f, end %f)\n", (finish-start).GetSeconds(), start.GetSeconds(), finish.GetSeconds());
 	printf("All done.\n");
 	return 0;
 }
