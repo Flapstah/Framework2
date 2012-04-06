@@ -1,34 +1,25 @@
-#if !defined(__DEBUGTEXT_H__)
-#define __DEBUGTEXT_H__
+#if !defined(__DEBUGFONT_H__)
+#define __DEBUGFONT_H__
 
 //==============================================================================
 
 namespace engine
 {
 	//============================================================================
-	// CDebugText
+	// CDebugFont
 	//============================================================================
-	class CDebugText
+	class CDebugFont
 	{
 		public:
-			CDebugText(void);
-			~CDebugText(void);
-
-			uint32 Print(void* pData, uint32 width, uint32 height, uint32 xpos, uint32 ypos, const char* text);
-			uint32 Width(const char* text);
-
-		protected:
-			void InitFontData(void);
-
-			struct SChar
+			struct SGlyph
 			{
-				SChar(void)
+				SGlyph(void)
 					: m_width(0)
 				{
 					memset(m_data, 0, sizeof(m_data));
 				}
 
-				SChar(uint8 data0, uint8 data1, uint8 data2, uint8 data3, uint8 data4, uint8 data5, uint8 data6, uint8 width)
+				SGlyph(uint8 data0, uint8 data1, uint8 data2, uint8 data3, uint8 data4, uint8 data5, uint8 data6, uint8 width)
 					: m_width(width)
 				{
 					m_data[0] = data0;
@@ -42,16 +33,25 @@ namespace engine
 
 				uint8 m_data[7];
 				uint8 m_width;
-			}; // End [struct SChar]
+			}; // End [struct SGlyph]
 
-			SChar m_font[95]; // Basic ASCII ' ' (32) to '~' (126), with DEL (127) representing unprintable characters 
+		public:
+			CDebugFont(void);
+			~CDebugFont(void);
 
-	}; // End [class CDebugText]
+			const SGlyph* GetGlyph(char glyph);
+
+		protected:
+			void InitFontData(void);
+
+			SGlyph m_font[95]; // Basic ASCII ' ' (32) to '~' (126), with DEL (127) representing unprintable characters 
+
+	}; // End [class CDebugFont]
 
 //============================================================================
 } // End [namespace engine]
 
 //==============================================================================
-#endif // !defined(__DEBUGTEXT_H__)
+#endif // !defined(__DEBUGFONT_H__)
 // [EOF]
 
