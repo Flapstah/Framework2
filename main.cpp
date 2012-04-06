@@ -9,6 +9,7 @@
 #include "time/timevalue.h"
 
 #include "graphics/display.h"
+#include "graphics/debugfont.h"
 #include "input/keyboard.h"
 
 #define WINDOW_WIDTH (640)
@@ -108,6 +109,48 @@ class CRenderer
 		m_timer.Tick();
 	}
 
+	uint32 Print(uint32 ypos, uint32 xpos, uint32 inkColour, uint32 paperColour, const char* text)
+	{
+		uint32 width = 0;
+
+		while (*text)
+		{
+			const engine::CDebugFont::SGlyph* pGlyph = m_debugFont.GetGlyph(*text);
+
+			for (uint8 y = 0; y < 7; ++y)
+			{
+				if ((ypos+y) < WINDOW_HEIGHT)
+				{
+					uint32 pixel = ((ypos+y)*WINDOW_WIDTH)+xpos+width;
+					for (uint8 x = 0; x < pGlyph->m_width; ++x)
+					{
+						if ((xpos+width+x) < WINDOW_WIDTH)
+						{
+							bool bit = ((pGlyph->m_data[y] & (0x80>>x)) != 0);
+							uint32 colour = (bit) ? inkColour : paperColour;
+							// TODO: modify colour by alpha channel
+							m_screen[pixel] = colour;
+						}
+						else
+						{
+							break;
+						}
+						++pixel;
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			width += pGlyph->m_width;
+			++text;
+		}
+
+		return width;
+	}
+
 	protected:
 	static bool Callback(engine::CCallbackTimer* pTimer, void* pUserData)
 	{
@@ -120,6 +163,7 @@ class CRenderer
 
 	protected:
 	engine::CDisplay m_display;
+	engine::CDebugFont m_debugFont;
 	engine::CCallbackTimer m_timer;
 	uint32 m_screen[WINDOW_WIDTH*WINDOW_HEIGHT];
 };
@@ -186,6 +230,16 @@ int main(int argc, char* argv[])
 	engine::CTimeValue maxFrameTime(0.1);
 	engine::CCallbackTimer ct(rtc, maxFrameTime, 1.0f, 1.0, TimerCallback, NULL);
 
+	uint32 xpos = 100;
+	xpos += renderer.Print(100, xpos, 0x00ffffff, 0, "Andrew");
+	xpos += renderer.Print(100, xpos, 0x00ffffff, 0, " Catlender");
+
+	renderer.Print(200, 100, 0x00ffffff, 0, "THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG");
+	renderer.Print(210, 100, 0x00ffffff, 0, "the quick brown fox jumped over the lazy dog");
+	renderer.Print(220, 100, 0x00ffffff, 0, "0123456789");
+	renderer.Print(230, 100, 0x00ffffff, 0, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
+
+
 	while (ct.IsActive())
 	{
 		ct.Tick();
@@ -195,6 +249,7 @@ int main(int argc, char* argv[])
 	engine::CTimeValue finish = rtc.GetCurrentTime();
 	printf("Total elapsed time %fs (start %f, end %f)\n", (finish-start).GetSeconds(), start.GetSeconds(), finish.GetSeconds());
 	printf("All done.\n");
+
 	return 0;
 }
 
