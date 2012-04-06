@@ -19,7 +19,7 @@ namespace engine
 					memset(m_data, 0, sizeof(m_data));
 				}
 
-				SGlyph(uint8 data0, uint8 data1, uint8 data2, uint8 data3, uint8 data4, uint8 data5, uint8 data6, uint8 width)
+				SGlyph(uint8 data0, uint8 data1, uint8 data2, uint8 data3, uint8 data4, uint8 data5, uint8 data6, uint8 data7, uint8 data8, uint8 width)
 					: m_width(width)
 				{
 					m_data[0] = data0;
@@ -29,9 +29,11 @@ namespace engine
 					m_data[4] = data4;
 					m_data[5] = data5;
 					m_data[6] = data6;
+					m_data[7] = data7;
+					m_data[8] = data8;
 				}
 
-				uint8 m_data[7];
+				uint8 m_data[9];
 				uint8 m_width;
 			}; // End [struct SGlyph]
 
@@ -39,7 +41,8 @@ namespace engine
 			CDebugFont(void);
 			~CDebugFont(void);
 
-			const SGlyph* GetGlyph(char glyph);
+			const SGlyph* GetGlyph(char glyph) const;
+			uint8 GetFontHeight(void) const;
 
 		protected:
 			void InitFontData(void);

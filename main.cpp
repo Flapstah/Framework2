@@ -112,12 +112,13 @@ class CRenderer
 	uint32 Print(uint32 ypos, uint32 xpos, uint32 inkColour, uint32 paperColour, const char* text)
 	{
 		uint32 width = 0;
+		uint8 height = m_debugFont.GetFontHeight();
 
 		while (*text)
 		{
 			const engine::CDebugFont::SGlyph* pGlyph = m_debugFont.GetGlyph(*text);
 
-			for (uint8 y = 0; y < 7; ++y)
+			for (uint8 y = 0; y < height; ++y)
 			{
 				if ((ypos+y) < WINDOW_HEIGHT)
 				{
@@ -240,7 +241,7 @@ int main(int argc, char* argv[])
 	renderer.Print(230, 100, 0x00ffffff, 0, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
 
 
-	while (ct.IsActive())
+	while (ct.IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
 	{
 		ct.Tick();
 		renderer.Update();
