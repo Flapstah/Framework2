@@ -10,12 +10,13 @@
 
 #include <GL/glfw.h>
 
-#include "keyboard.h"
+#include "input/keyboard.h"
 
 //==============================================================================
-
-#define DEBUG_INPUT 0
-
+//
+// NOTE: CKeyboard *MUST* be initialised *AFTER* glfwOpenWindow() is called
+//			 otherwise no keyboard events will be trapped.
+//
 //==============================================================================
 
 namespace engine
@@ -32,7 +33,7 @@ namespace engine
     memset(s_keyState, 0, sizeof(s_keyState) * sizeof(bool));
     memset(s_keyPrevState, 0, sizeof(s_keyPrevState) * sizeof(bool));
 
-    glfwSetKeyCallback(Update);
+    glfwSetKeyCallback(CKeyboard::Update);
   }
 
   //============================================================================
@@ -46,8 +47,8 @@ namespace engine
   void CKeyboard::Update(int key, int action)
   {
     s_keyState[key] = (action == GLFW_PRESS) ? true : false;
-#if DEBUG_INPUT
 
+#if LOG_KEYBOARD_INPUT
     if (key >= GLFW_KEY_SPECIAL)
     {
       fprintf(stderr, "key %d, %s\n", key, (action == GLFW_PRESS) ? "pressed" : "released");
@@ -56,8 +57,7 @@ namespace engine
     {
       fprintf(stderr, "key '%c', %s\n", key, (action == GLFW_PRESS) ? "pressed" : "released");
     }
-
-#endif // DEBUG_INPUT
+#endif // LOG_KEYBOARD_INPUT
   }
 
   //============================================================================

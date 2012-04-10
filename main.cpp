@@ -177,12 +177,12 @@ int main(int argc, char* argv[])
 	IGNORE_PARAMETER(argv);
 //	DumpArgs(argc, argv);
 
-	engine::CKeyboard::Initialise();
 	engine::CTime::Initialise();
 
 	g_FrameInterval = FRAME_INTERVAL;
 
 	CRenderer renderer;
+	engine::CKeyboard::Initialise();
 
 	printf("Starting 5 second test...\n");
 
