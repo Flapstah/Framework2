@@ -14,14 +14,14 @@ namespace engine
 	class CTime
 	{
 		public:
-		static void Initialise(void);
-		static void Sleep(uint32 microseconds);
-		static CRealTimeClock& RealTimeClock(void);
-		static CTimer& GameClock(void);
+			static void Initialise(void);
+			static void Sleep(uint32 microseconds);
+			static CRealTimeClock& RealTimeClock(void);
+			static CTimer& GameClock(void);
 
-	protected:
-		static CRealTimeClock& s_realTimeClock;
-		static CTimer& s_gameTimer;
+		protected:
+			static CRealTimeClock& s_realTimeClock;
+			static CTimer& s_gameTimer;
 	}; // End [class CTime]
 
 	//============================================================================

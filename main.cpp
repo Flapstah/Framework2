@@ -248,7 +248,7 @@ int main(int argc, char* argv[])
 	}
 
 	engine::CTimeValue finish = rtc.GetCurrentTime();
-	printf("Total elapsed time %fs (start %f, end %f)\n", (finish-start).GetSeconds(), start.GetSeconds(), finish.GetSeconds());
+	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	printf("All done.\n");
 
 	return 0;
