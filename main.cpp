@@ -8,16 +8,8 @@
 #include "time/callbacktimer.h"
 #include "time/timevalue.h"
 
-#include "graphics/display.h"
-#include "graphics/debugfont.h"
+#include "graphics/renderer.h"
 #include "input/keyboard.h"
-
-#define WINDOW_WIDTH (640)
-#define WINDOW_HEIGHT (400)
-
-#define DESIRED_FRAMERATE (10.0)
-#define FRAME_INTERVAL (1.0/DESIRED_FRAMERATE)
-engine::CTimeValue g_FrameInterval; // cannot set before CTime::Initialise()
 
 //==============================================================================
 
@@ -87,90 +79,6 @@ bool TimerCallback(engine::CCallbackTimer* pTimer, void* pUserData)
 
 //==============================================================================
 
-class CRenderer
-{
-	public:
-	CRenderer(void)
-		: m_display(WINDOW_WIDTH, WINDOW_HEIGHT, "Framework test")
-		, m_timer(engine::CTime::RealTimeClock(), g_FrameInterval, 1.0f, FRAME_INTERVAL, Callback, this)
-	{
-		for (uint32 i = 0; i < WINDOW_WIDTH*WINDOW_HEIGHT; ++i)
-		{
-			m_screen[i] = 0x00ff0000;
-		}
-	}
-
-	~CRenderer(void)
-	{
-	}
-
-	void Update(void)
-	{
-		m_timer.Tick();
-	}
-
-	uint32 Print(uint32 ypos, uint32 xpos, uint32 inkColour, uint32 paperColour, const char* text)
-	{
-		uint32 width = 0;
-		uint8 height = m_debugFont.GetFontHeight();
-
-		while (*text)
-		{
-			const engine::CDebugFont::SGlyph* pGlyph = m_debugFont.GetGlyph(*text);
-
-			for (uint8 y = 0; y < height; ++y)
-			{
-				if ((ypos+y) < WINDOW_HEIGHT)
-				{
-					uint32 pixel = ((ypos+y)*WINDOW_WIDTH)+xpos+width;
-					for (uint8 x = 0; x < pGlyph->m_width; ++x)
-					{
-						if ((xpos+width+x) < WINDOW_WIDTH)
-						{
-							bool bit = ((pGlyph->m_data[y] & (0x80>>x)) != 0);
-							uint32 colour = (bit) ? inkColour : paperColour;
-							// TODO: modify colour by alpha channel
-							m_screen[pixel] = colour;
-						}
-						else
-						{
-							break;
-						}
-						++pixel;
-					}
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			width += pGlyph->m_width;
-			++text;
-		}
-
-		return width;
-	}
-
-	protected:
-	static bool Callback(engine::CCallbackTimer* pTimer, void* pUserData)
-	{
-		CRenderer* pThis = reinterpret_cast<CRenderer*>(pUserData);
-
-		pThis->m_display.Update(&pThis->m_screen);
-
-		return true;
-	}
-
-	protected:
-	engine::CDisplay m_display;
-	engine::CDebugFont m_debugFont;
-	engine::CCallbackTimer m_timer;
-	uint32 m_screen[WINDOW_WIDTH*WINDOW_HEIGHT];
-};
-
-//==============================================================================
-
 int main(int argc, char* argv[])
 {
 	IGNORE_PARAMETER(argc);
@@ -178,10 +86,7 @@ int main(int argc, char* argv[])
 //	DumpArgs(argc, argv);
 
 	engine::CTime::Initialise();
-
-	g_FrameInterval = FRAME_INTERVAL;
-
-	CRenderer renderer;
+	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
 	engine::CKeyboard::Initialise();
 
 	printf("Starting 5 second test...\n");
