@@ -16,7 +16,7 @@ namespace engine
 	class CTimer
 	{
 		public:
-			CTimer(CTimer& parent, CTimeValue& maxFrameTime, float scale)
+			CTimer(CTimer& parent, CTimeValue maxFrameTime, float scale)
 				: m_maxFrameTime(maxFrameTime)
 				, m_pParent(&parent)
 				,	m_referenceCount(0)
@@ -27,7 +27,7 @@ namespace engine
 				Reset();
 			}
 
-			CTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale)
+			CTimer(CRealTimeClock& parent, CTimeValue maxFrameTime, float scale)
 				: m_maxFrameTime(maxFrameTime)
 				, m_pParent(NULL)
 				,	m_referenceCount(0)
@@ -101,7 +101,7 @@ namespace engine
 				return paused;
 			}
 
-			void SetMaxFrameTime(CTimeValue& maxFrameTime)
+			void SetMaxFrameTime(CTimeValue maxFrameTime)
 			{
 				m_maxFrameTime = maxFrameTime;
 			}

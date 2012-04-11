@@ -19,7 +19,7 @@ namespace engine
 		public:
 			typedef bool (*Callback)(CCallbackTimer*, void*);
 
-			CCallbackTimer(CTimer& parent, CTimeValue& maxFrameTime, float scale, CTimeValue& interval, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CTimer& parent, CTimeValue maxFrameTime, float scale, CTimeValue interval, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(interval)
 				, m_pCallback(pCallback)
@@ -28,7 +28,7 @@ namespace engine
 			{
 			}
 
-			CCallbackTimer(CTimer& parent, CTimeValue& maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CTimer& parent, CTimeValue maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(intervalInSeconds)
 				, m_pCallback(pCallback)
@@ -37,7 +37,7 @@ namespace engine
 			{
 			}
 
-			CCallbackTimer(CTimer& parent, CTimeValue& maxFrameTime, float scale, uint64 intervalInTicks, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CTimer& parent, CTimeValue maxFrameTime, float scale, uint64 intervalInTicks, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(intervalInTicks)
 				, m_pCallback(pCallback)
@@ -46,7 +46,7 @@ namespace engine
 			{
 			}
 
-			CCallbackTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale, CTimeValue& interval, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CRealTimeClock& parent, CTimeValue maxFrameTime, float scale, CTimeValue interval, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(interval)
 				, m_pCallback(pCallback)
@@ -55,7 +55,7 @@ namespace engine
 			{
 			}
 
-			CCallbackTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CRealTimeClock& parent, CTimeValue maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(intervalInSeconds)
 				, m_pCallback(pCallback)
@@ -64,7 +64,7 @@ namespace engine
 			{
 			}
 
-			CCallbackTimer(CRealTimeClock& parent, CTimeValue& maxFrameTime, float scale, uint64 intervalInTicks, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CRealTimeClock& parent, CTimeValue maxFrameTime, float scale, uint64 intervalInTicks, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(intervalInTicks)
 				, m_pCallback(pCallback)
@@ -76,6 +76,26 @@ namespace engine
 			// ITimer
 			virtual const CTimeValue& Tick(void);
 			// ~ITimer
+
+			void SetInterval(CTimeValue interval)
+			{
+				m_interval = interval;
+			}
+
+			void SetInterval(double intervalInSeconds)
+			{
+				m_interval = intervalInSeconds;
+			}
+
+			void SetInterval(uint64 intervalInTicks)
+			{
+				m_interval = intervalInTicks;
+			}
+
+			const CTimeValue& GetInterval(void)
+			{
+				return m_interval;
+			}
 
 			void SetActive(bool active)
 			{
