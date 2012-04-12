@@ -141,21 +141,21 @@ namespace engine
 		int32 x = (width - scaledWidth) / 2;
 		//int32 y = (height - scaledHeight) / 2;
 
+		int32 consoleDelta = m_consoleTarget-m_consoleHeight;
+		int32 y = scaledHeight-m_consoleHeight-(sinlerp(m_consoleVisibility)*consoleDelta);
+
 		if (m_consoleVisibility < 1.0f)
 		{
 			if (m_consoleVisibility < 1.0f)
 			{
 				m_consoleVisibility += 2.0/DEFAULT_FRAMERATE;
-			}
-			else
-			{
-				m_consoleVisibility = 1.0f;
-				m_consoleHeight = m_consoleTarget;
+				if (m_consoleVisibility > 1.0f)
+				{
+					m_consoleVisibility = 1.0f;
+					m_consoleHeight = m_consoleTarget;
+				}
 			}
 		}
-
-		int32 consoleDelta = m_consoleTarget-m_consoleHeight;
-		int32 y = scaledHeight-m_consoleHeight-(sinlerp(m_consoleVisibility)*consoleDelta);
 
 		// Render textured quad
 		glBegin(GL_QUADS);
@@ -216,6 +216,18 @@ namespace engine
 		}
 
 		return width;
+	}
+
+	//============================================================================
+
+	void CRenderer::SetConsoleHeight(uint32 height)
+	{
+		if (m_consoleVisibility >= 1.0f)
+		{
+			m_consoleTarget = height;
+			m_consoleVisibility = 0.0f;
+		}
+		printf("delta %d\n", m_consoleTarget-m_consoleHeight);
 	}
 
 	//============================================================================

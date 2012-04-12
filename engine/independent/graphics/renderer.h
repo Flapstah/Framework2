@@ -22,6 +22,7 @@ namespace engine
 			bool Update(void);
 
 			uint32 Print(uint32 ypos, uint32 xpos, uint32 inkColour, uint32 paperColour, const char* text);
+			void SetConsoleHeight(uint32 height);
 
 		protected:
 			static bool Callback(engine::CCallbackTimer* pTimer, void* pUserData);
