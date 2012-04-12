@@ -38,6 +38,9 @@ namespace engine
 			uint32* m_pConsoleDisplay;
 			uint32 m_width;
 			uint32 m_height;
+			uint32 m_consoleHeight;
+			uint32 m_consoleTarget;
+			float m_consoleVisibility;
 			float m_displayScale;
 			const char* m_title;
 			float m_frameRate;

@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <math.h>
+
 #include <GL/glfw.h>
 //#include "includes/glext.h"
 
@@ -19,13 +21,37 @@ namespace engine
 {
 	//============================================================================
 
+#define PI (3.141592654)
+#define TWO_PI (PI*2.0)
+#define HALF_PI (PI/2.0)
+	double sinlerp(double weight)
+	{
+		if (weight < 0.0)
+		{
+			weight = 0.0;
+		}
+
+		if (weight > 1.0)
+		{
+			weight = 1.0;
+		}
+
+		weight = (weight*PI)-HALF_PI;
+		return sin(weight);
+	}
+
+	//============================================================================
+
 	CRenderer::CRenderer(uint32 width, uint32 height, const char* title, float frameRate)
 		: m_timer(engine::CTime::RealTimeClock(), CTimeValue(), 1.0f, 0.0, CRenderer::Callback, this)
 		, m_width(width)
 		, m_height(height)
+		, m_consoleHeight(0)
+		, m_consoleTarget(height>>1)
+		, m_consoleVisibility(0.0f)
+		, m_displayScale(1.0f)
 		, m_title(title)
 		, m_frameRate(frameRate)
-		, m_displayScale(1.0f)
 	{
 		m_pConsoleDisplay = new uint32[m_width*m_height];
 
@@ -113,7 +139,23 @@ namespace engine
 		int32 scaledWidth = static_cast<int32>(m_displayScale * m_width);
 		int32 scaledHeight = static_cast<int32>(m_displayScale * m_height);
 		int32 x = (width - scaledWidth) / 2;
-		int32 y = (height - scaledHeight) / 2;
+		//int32 y = (height - scaledHeight) / 2;
+
+		if (m_consoleVisibility < 1.0f)
+		{
+			if (m_consoleVisibility < 1.0f)
+			{
+				m_consoleVisibility += 2.0/DEFAULT_FRAMERATE;
+			}
+			else
+			{
+				m_consoleVisibility = 1.0f;
+				m_consoleHeight = m_consoleTarget;
+			}
+		}
+
+		int32 consoleDelta = m_consoleTarget-m_consoleHeight;
+		int32 y = scaledHeight-m_consoleHeight-(sinlerp(m_consoleVisibility)*consoleDelta);
 
 		// Render textured quad
 		glBegin(GL_QUADS);
@@ -146,7 +188,7 @@ namespace engine
 			{
 				if ((ypos+y) < m_height)
 				{
-					uint32 pixel = ((ypos+y)*m_width)+xpos+width;
+					uint32 pixel = ((ypos+y)*m_width)+xpos+width;;
 					for (uint8 x = 0; x < pGlyph->m_width; ++x)
 					{
 						if ((xpos+width+x) < m_width)
