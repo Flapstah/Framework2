@@ -13,6 +13,10 @@
 
 //==============================================================================
 
+#define TEST_LENGTH (10.0)
+
+//==============================================================================
+
 void DumpArgs(int argc, char* argv[])
 {
 	printf("*** Passed %d arguments:\n", argc);
@@ -69,7 +73,7 @@ bool TimerCallback(engine::CCallbackTimer* pTimer, void* pUserData)
 
 	printf("%fs elapsed\n", elapsedSeconds);
 
-	if (elapsedSeconds >= 5.0)
+	if (elapsedSeconds >= TEST_LENGTH)
 	{
 		running = false;
 	}
