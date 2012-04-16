@@ -153,9 +153,7 @@ int main(int argc, char* argv[])
 	while (ct.IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
 	{
 		ct.Tick();
-		if (engine::CKeyboard::IsKeyPressed(GLFW_KEY_F1)) renderer.SetConsoleHeight(100);
-		if (engine::CKeyboard::IsKeyPressed(GLFW_KEY_F2)) renderer.SetConsoleHeight(200);
-		if (engine::CKeyboard::IsKeyPressed(GLFW_KEY_F3)) renderer.SetConsoleHeight(300);
+		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
 		renderer.Update();
 	}
 

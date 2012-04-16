@@ -218,8 +218,42 @@ namespace engine
 
 	//============================================================================
 
-	void CRenderer::SetConsoleHeight(uint32 height)
+	void CRenderer::ActivateConsole(bool activate)
 	{
+		if (activate && (m_consoleTargetYPos == 0))
+		{
+			SetConsoleHeight(0.5f);
+		}
+
+		if (!activate && (m_consoleTargetYPos != 0))
+		{
+			SetConsoleHeight(0.0f);
+		}
+	}
+
+	//============================================================================
+
+	bool CRenderer::IsConsoleActive(void) const
+	{
+		return (m_consoleTargetYPos != 0);
+	}
+
+	//============================================================================
+
+	void CRenderer::SetConsoleHeight(float ratio)
+	{
+		if (ratio < 0.0f)
+		{
+			ratio = 0.0f;
+		}
+
+		if (ratio > 1.0f)
+		{
+			ratio = 1.0f;
+		}
+
+		uint32 height = ratio*m_height;
+
 		if (m_consoleTargetYPos != height)
 		{
 			m_consoleStartYPos = m_consoleCurrentYPos;
