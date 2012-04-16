@@ -37,7 +37,7 @@ namespace engine
 		}
 
 		weight = (weight*PI)-HALF_PI;
-		return sin(weight);
+		return (sin(weight)+1.0)/2.0;
 	}
 
 	//============================================================================
@@ -46,9 +46,10 @@ namespace engine
 		: m_timer(engine::CTime::RealTimeClock(), CTimeValue(), 1.0f, 0.0, CRenderer::Callback, this)
 		, m_width(width)
 		, m_height(height)
-		, m_consoleHeight(0)
-		, m_consoleTarget(height>>1)
-		, m_consoleVisibility(0.0f)
+		, m_consoleStartYPos(0)
+		, m_consoleCurrentYPos(0)
+		, m_consoleTargetYPos(0)
+		, m_consoleVisibility(1.0f)
 		, m_displayScale(1.0f)
 		, m_title(title)
 		, m_frameRate(frameRate)
@@ -125,7 +126,7 @@ namespace engine
 		glViewport(0, 0, width, height);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluOrtho2D(0.0, (GLdouble)width, 0.0, (GLdouble)height);
+		gluOrtho2D(0.0, (GLdouble)width, (GLdouble)height, 0.0);
 
 		// Clear back buffer
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -136,13 +137,8 @@ namespace engine
 		glBindTexture(GL_TEXTURE_2D, eTID_Console);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pConsoleDisplay);
 
-		int32 scaledWidth = static_cast<int32>(m_displayScale * m_width);
-		int32 scaledHeight = static_cast<int32>(m_displayScale * m_height);
-		int32 x = (width - scaledWidth) / 2;
-		//int32 y = (height - scaledHeight) / 2;
-
-		int32 consoleDelta = m_consoleTarget-m_consoleHeight;
-		int32 y = scaledHeight-m_consoleHeight-(sinlerp(m_consoleVisibility)*consoleDelta);
+		int32 delta = m_consoleTargetYPos-m_consoleStartYPos;
+		m_consoleCurrentYPos = m_consoleStartYPos+(sinlerp(m_consoleVisibility)*delta);
 
 		if (m_consoleVisibility < 1.0f)
 		{
@@ -152,21 +148,23 @@ namespace engine
 				if (m_consoleVisibility > 1.0f)
 				{
 					m_consoleVisibility = 1.0f;
-					m_consoleHeight = m_consoleTarget;
 				}
 			}
 		}
 
+		int32 x = 0;
+		int32 y = m_consoleCurrentYPos-height;
+
 		// Render textured quad
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2i(x, y);
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2i(x, y + scaledHeight);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2i(x + scaledWidth, y + scaledHeight);
+		glVertex2i(x, y);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2i(x, y + height);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2i(x + scaledWidth, y);
+		glVertex2i(x + width, y + height);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2i(x + width, y);
 		glEnd();
 
 		glfwSwapBuffers();
@@ -222,12 +220,12 @@ namespace engine
 
 	void CRenderer::SetConsoleHeight(uint32 height)
 	{
-		if (m_consoleVisibility >= 1.0f)
+		if (m_consoleTargetYPos != height)
 		{
-			m_consoleTarget = height;
+			m_consoleStartYPos = m_consoleCurrentYPos;
+			m_consoleTargetYPos = height;
 			m_consoleVisibility = 0.0f;
 		}
-		printf("delta %d\n", m_consoleTarget-m_consoleHeight);
 	}
 
 	//============================================================================
