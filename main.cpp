@@ -15,7 +15,7 @@
 
 //==============================================================================
 
-#define TEST_LENGTH (10.0)
+#define TEST_LENGTH (5.0)
 
 //==============================================================================
 
@@ -137,6 +137,8 @@ int main(int argc, char* argv[])
 	}
 	*/
 
+	/////////////////////////////////////////////////////////////////////////////
+	// callback timer and renderer test
 	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
 	engine::CTimeValue start = rtc.GetCurrentTime();
 	engine::CTimeValue maxFrameTime(0.1);
@@ -151,9 +153,24 @@ int main(int argc, char* argv[])
 	renderer.Print(220, 100, 0x00ffffff, 0, "0123456789");
 	renderer.Print(230, 100, 0x00ffffff, 0, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
 
+	while (ct.IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
+	{
+		ct.Tick();
+		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
+		renderer.Update();
+	}
+	/////////////////////////////////////////////////////////////////////////////
+
+	/////////////////////////////////////////////////////////////////////////////
+	// console variables test
 	uint64 test_uint64 = 0;
 	REGISTER_CONSOLE_VARIABLE("test_uint64", test_uint64, 123, 0, "An unsigned int console variable");
+	int64 test_int64 = 0;
+	REGISTER_CONSOLE_VARIABLE("test_int64", test_int64, -123, 0, "A signed int console variable");
+	double test_floatingpoint = 0.0;
+	REGISTER_CONSOLE_VARIABLE("test_floatingpoint", test_floatingpoint, 123.456, 0, "A floating point console variable");
 
+	printf("console variable: unsigned int\n");
 	engine::CConsole::SVariable* pVar = engine::CConsole::Get()->GetVariable("test_uint64");
 	if (pVar != NULL)
 	{
@@ -168,14 +185,41 @@ int main(int argc, char* argv[])
 		printf("  value: %" PRIu64 "\n", pVar->GetUINT64());
 	}
 
-	while (ct.IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
+	printf("console variable: signed int\n");
+	pVar = engine::CConsole::Get()->GetVariable("test_int64");
+	if (pVar != NULL)
 	{
-		ct.Tick();
-		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
-		renderer.Update();
+		printf("Found console variable:\n");
+		printf("  usage: %s\n", pVar->GetUsage());
+		printf("  value: %" PRId64 "\n", pVar->GetINT64());
+		printf("Setting in code to -99\n");
+		test_int64 = -99;
+		printf("  value: %" PRId64 "\n", pVar->GetINT64());
+		printf("Setting via console variable to 789\n");
+		pVar->Set(789ll);
+		printf("  value: %" PRId64 "\n", pVar->GetINT64());
 	}
 
+	printf("console variable: floating point\n");
+	pVar = engine::CConsole::Get()->GetVariable("test_floatingpoint");
+	if (pVar != NULL)
+	{
+		printf("Found console variable:\n");
+		printf("  usage: %s\n", pVar->GetUsage());
+		printf("  value: %f\n", pVar->GetFloatingPoint());
+		printf("Setting in code to -3.14159\n");
+		test_floatingpoint = -3.14159;
+		printf("  value: %f\n", pVar->GetFloatingPoint());
+		printf("Setting via console variable to 0.789\n");
+		pVar->Set(0.789);
+		printf("  value: %f\n", pVar->GetFloatingPoint());
+	}
+
+
+	UNREGISTER_CONSOLE_VARIABLE("test_floatingpoint");
+	UNREGISTER_CONSOLE_VARIABLE("test_int64");
 	UNREGISTER_CONSOLE_VARIABLE("test_uint64");
+	/////////////////////////////////////////////////////////////////////////////
 
 	engine::CTimeValue finish = rtc.GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
