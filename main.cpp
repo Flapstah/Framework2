@@ -2,16 +2,17 @@
 
 #include <GL/glfw.h>
 
-#include "time/time.h"
-#include "time/realtimeclock.h"
-#include "time/timer.h"
-#include "time/callbacktimer.h"
 #include "time/timevalue.h"
+#include "time/callbacktimer.h"
+//#include "time/time.h"
+//#include "time/realtimeclock.h"
+//#include "time/timer.h"
 
-#include "graphics/renderer.h"
-#include "input/keyboard.h"
+//#include "graphics/renderer.h"
+//#include "input/keyboard.h"
 
 #include "common/console.h"
+#include "common/system.h"
 
 //==============================================================================
 
@@ -91,13 +92,11 @@ int main(int argc, char* argv[])
 	IGNORE_PARAMETER(argv);
 //	DumpArgs(argc, argv);
 
-	engine::CTime::Initialise();
-	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
-	engine::CKeyboard::Initialise();
-
-	printf("Starting 5 second test...\n");
+	engine::CSystem::Initialise();
 
 	/*
+	/////////////////////////////////////////////////////////////////////////////
+	// CTimeValue tests
 	printf("sizeof(CTimeValue) is %d\n", sizeof(engine::CTimeValue));
 
 	TimeValueTest(60.0);
@@ -113,9 +112,12 @@ int main(int argc, char* argv[])
 		 	(time & HOURS_MASK) >> HOURS_SHIFT,
 		 	(time & MINUTES_MASK) >> MINUTES_SHIFT,
 		 	engine::CTimeValue::GetSeconds(time & SECONDS_MASK));
+	/////////////////////////////////////////////////////////////////////////////
 	*/
 
 	/*
+	/////////////////////////////////////////////////////////////////////////////
+	// CRealTimeClock test
 	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
 	engine::CTimer& gc = engine::CTime::GameClock();
 	engine::CTimeValue elapsed(0.0);
@@ -135,10 +137,16 @@ int main(int argc, char* argv[])
 			ticker -= 1.0;
 		}
 	}
+	/////////////////////////////////////////////////////////////////////////////
 	*/
 
+	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// callback timer and renderer test
+	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
+
+	printf("Starting %.02f second test...\n", TEST_LENGTH);
+
 	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
 	engine::CTimeValue start = rtc.GetCurrentTime();
 	engine::CTimeValue maxFrameTime(0.1);
@@ -159,16 +167,20 @@ int main(int argc, char* argv[])
 		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
 		renderer.Update();
 	}
+
+	engine::CTimeValue finish = rtc.GetCurrentTime();
+	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	/////////////////////////////////////////////////////////////////////////////
+	*/
 
 	/////////////////////////////////////////////////////////////////////////////
 	// console variables test
 	uint64 test_uint64 = 0;
-	REGISTER_CONSOLE_VARIABLE("test_uint64", test_uint64, 123, 0, "An unsigned int console variable");
+	REGISTER_CONSOLE_VARIABLE(test_uint64, 123, 0, "An unsigned int console variable");
 	int64 test_int64 = 0;
-	REGISTER_CONSOLE_VARIABLE("test_int64", test_int64, -123, 0, "A signed int console variable");
+	REGISTER_CONSOLE_VARIABLE(test_int64, -123, 0, "A signed int console variable");
 	double test_floatingpoint = 0.0;
-	REGISTER_CONSOLE_VARIABLE("test_floatingpoint", test_floatingpoint, 123.456, 0, "A floating point console variable");
+	REGISTER_CONSOLE_VARIABLE(test_floatingpoint, 123.456, 0, "A floating point console variable");
 
 	printf("console variable: unsigned int\n");
 	engine::CConsole::SVariable* pVar = engine::CConsole::Get()->GetVariable("test_uint64");
@@ -181,7 +193,7 @@ int main(int argc, char* argv[])
 		test_uint64 = 99;
 		printf("  value: %" PRIu64 "\n", pVar->GetUINT64());
 		printf("Setting via console variable to 789\n");
-		pVar->Set(789ull);
+		pVar->Set(uint64(789));
 		printf("  value: %" PRIu64 "\n", pVar->GetUINT64());
 	}
 
@@ -196,7 +208,7 @@ int main(int argc, char* argv[])
 		test_int64 = -99;
 		printf("  value: %" PRId64 "\n", pVar->GetINT64());
 		printf("Setting via console variable to 789\n");
-		pVar->Set(789ll);
+		pVar->Set(int64(789));
 		printf("  value: %" PRId64 "\n", pVar->GetINT64());
 	}
 
@@ -216,15 +228,14 @@ int main(int argc, char* argv[])
 	}
 
 
-	UNREGISTER_CONSOLE_VARIABLE("test_floatingpoint");
-	UNREGISTER_CONSOLE_VARIABLE("test_int64");
-	UNREGISTER_CONSOLE_VARIABLE("test_uint64");
+	UNREGISTER_CONSOLE_VARIABLE(test_floatingpoint);
+	UNREGISTER_CONSOLE_VARIABLE(test_int64);
+	UNREGISTER_CONSOLE_VARIABLE(test_uint64);
 	/////////////////////////////////////////////////////////////////////////////
 
-	engine::CTimeValue finish = rtc.GetCurrentTime();
-	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	printf("All done.\n");
 
+	engine::CSystem::Uninitialise();
 	return 0;
 }
 

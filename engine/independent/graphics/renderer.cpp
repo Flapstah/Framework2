@@ -14,6 +14,7 @@
 
 #include "time/time.h"
 #include "graphics/renderer.h"
+#include "input/keyboard.h"
 
 //==============================================================================
 
@@ -69,6 +70,8 @@ namespace engine
 
 			exit(EXIT_FAILURE);
 		}
+
+		engine::CKeyboard::Initialise();
 
 		for (uint32 i = 0; i < (m_width*m_height); ++i)
 		{

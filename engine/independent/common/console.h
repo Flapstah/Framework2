@@ -13,11 +13,12 @@ namespace engine
 	//============================================================================
 	// Helper macros
 	//============================================================================
-#define REGISTER_CONSOLE_VARIABLE(_name_, _variable_, _default_value_, _flags_, _usage_) \
+
+#define REGISTER_CONSOLE_VARIABLE(_variable_, _default_value_, _flags_, _usage_) \
 	_variable_ = _default_value_; \
-	engine::CConsole::Get()->RegisterVariable(_name_, _variable_, _flags_, _usage_);
-#define UNREGISTER_CONSOLE_VARIABLE(_name_) \
-	engine::CConsole::Get()->UnregisterVariable(_name_);
+	engine::CConsole::Get()->RegisterVariable(#_variable_, _variable_, _flags_, _usage_);
+#define UNREGISTER_CONSOLE_VARIABLE(_variable_) \
+	engine::CConsole::Get()->UnregisterVariable(#_variable_);
 
 	//============================================================================
 	// CConsole
