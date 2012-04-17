@@ -11,6 +11,8 @@
 #include "graphics/renderer.h"
 #include "input/keyboard.h"
 
+#include "common/console.h"
+
 //==============================================================================
 
 #define TEST_LENGTH (10.0)
@@ -149,6 +151,22 @@ int main(int argc, char* argv[])
 	renderer.Print(220, 100, 0x00ffffff, 0, "0123456789");
 	renderer.Print(230, 100, 0x00ffffff, 0, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
 
+	uint64 test_uint64 = 0;
+	REGISTER_CONSOLE_VARIABLE("test_uint64", test_uint64, 123, 0, "An unsigned int console variable");
+
+	engine::CConsole::SVariable* pVar = engine::CConsole::Get()->GetVariable("test_uint64");
+	if (pVar != NULL)
+	{
+		printf("Found console variable:\n");
+		printf("  usage: %s\n", pVar->GetUsage());
+		printf("  value: %" PRIu64 "\n", pVar->GetUINT64());
+		printf("Setting in code to 99\n");
+		test_uint64 = 99;
+		printf("  value: %" PRIu64 "\n", pVar->GetUINT64());
+		printf("Setting via console variable to 789\n");
+		pVar->Set(789ull);
+		printf("  value: %" PRIu64 "\n", pVar->GetUINT64());
+	}
 
 	while (ct.IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
 	{
@@ -156,6 +174,8 @@ int main(int argc, char* argv[])
 		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
 		renderer.Update();
 	}
+
+	UNREGISTER_CONSOLE_VARIABLE("test_uint64");
 
 	engine::CTimeValue finish = rtc.GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
