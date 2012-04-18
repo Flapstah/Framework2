@@ -8,7 +8,7 @@ namespace engine
 {
 	//============================================================================
 
-	const CTimeValue& CCallbackTimer::Tick(void)
+	const CTime::CTimeValue& CCallbackTimer::Tick(void)
 	{
 		if (m_active)
 		{

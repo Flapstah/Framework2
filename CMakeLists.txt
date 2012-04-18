@@ -83,7 +83,6 @@ set(PLATFORM_INDEPENDENT_SOURCES
 	engine/independent/time/callbacktimer.cpp
 	engine/independent/time/time.cpp
 	engine/independent/time/timer.cpp
-	engine/independent/time/timevalue.cpp
 	)
 if (WIN32)
 set(PLATFORM_SPECIFIC_SOURCES

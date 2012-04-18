@@ -2,7 +2,6 @@
 
 #include <GL/glfw.h>
 
-#include "time/timevalue.h"
 #include "time/callbacktimer.h"
 //#include "time/time.h"
 //#include "time/realtimeclock.h"
@@ -34,7 +33,7 @@ void DumpArgs(int argc, char* argv[])
 
 void DumpVariableSizes(void)
 {
-	printf("*** Variable sizes\n");
+	printf("*** Variable sizes:\n");
 #define PRINT_SIZE(_type_) printf(#_type_ "\t: %u\n", static_cast<uint32>(sizeof(_type_)))
 	PRINT_SIZE(int8);
 	PRINT_SIZE(int16);
@@ -47,22 +46,23 @@ void DumpVariableSizes(void)
 	PRINT_SIZE(bool);
 	PRINT_SIZE(float);
 	PRINT_SIZE(double);
+	PRINT_SIZE(size_t);
+	printf("\n__WORDSIZE = %d\n", __WORDSIZE);
 #undef PRINT_SIZE
 	printf("*** End variable sizes\n");
 }
 
 //==============================================================================
 
-void TimeValueTest(double seconds)
+void TimeValueTest(engine::CTime::CTimeValue value)
 {
-	engine::CTimeValue tv(seconds);
-	printf("Time %06.3fs\n", tv.GetSeconds());
-	uint64 time = tv.GetTime();
-	printf("%" PRIu64 " days, %02" PRIu64 ":%02" PRIu64 ":%06.3fs\n",
-		 	(time & DAYS_MASK) >> DAYS_SHIFT,
-		 	(time & HOURS_MASK) >> HOURS_SHIFT,
-		 	(time & MINUTES_MASK) >> MINUTES_SHIFT,
-		 	engine::CTimeValue::GetSeconds(time & SECONDS_MASK));
+	printf("Time %06.3fs\n", value.GetSeconds());
+
+	uint32 days, hours, minutes;
+	float seconds;
+	value.GetTime(days, hours, minutes, seconds);
+
+	printf("%u days, %02u:%02u:%06.3fs\n", days, hours, minutes, seconds);
 }
 
 //==============================================================================
@@ -91,43 +91,39 @@ int main(int argc, char* argv[])
 	IGNORE_PARAMETER(argc);
 	IGNORE_PARAMETER(argv);
 //	DumpArgs(argc, argv);
+//	DumpVariableSizes();
 
 	engine::CSystem::Initialise();
 
-	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CTimeValue tests
-	printf("sizeof(CTimeValue) is %d\n", sizeof(engine::CTimeValue));
+	printf("sizeof(CTime::CTimeValue) is %u\n", static_cast<uint32>(sizeof(engine::CTime::CTimeValue)));
 
-	TimeValueTest(60.0);
-	TimeValueTest(3600.0);
-	TimeValueTest(86400.0);
-	TimeValueTest(604800.0);
-
-	engine::CTimeValue tv(0xffffffffffffffffull);
-	printf("Time %06.3fs\n", tv.GetSeconds());
-	uint64 time = tv.GetTime();
-	printf("%" PRIu64 " days, %02" PRIu64 ":%02" PRIu64 ":%06.3fs\n",
-		 	(time & DAYS_MASK) >> DAYS_SHIFT,
-		 	(time & HOURS_MASK) >> HOURS_SHIFT,
-		 	(time & MINUTES_MASK) >> MINUTES_SHIFT,
-		 	engine::CTimeValue::GetSeconds(time & SECONDS_MASK));
+	engine::CTime::CTimeValue value(60.0);
+	TimeValueTest(value);
+	value = 3600.0;
+	TimeValueTest(value);
+	value = 86400.0;
+	TimeValueTest(value);
+	value = 604800.0;
+	TimeValueTest(value);
+	value = uint64(0xffffffffffffffffu);
+	TimeValueTest(value);
 	/////////////////////////////////////////////////////////////////////////////
-	*/
 
 	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CRealTimeClock test
 	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
 	engine::CTimer& gc = engine::CTime::GameClock();
-	engine::CTimeValue elapsed(0.0);
-	engine::CTimeValue target(5.0);
-	engine::CTimeValue ticker(0.0);
+	engine::CTime::CTimeValue elapsed(0.0);
+	engine::CTime::CTimeValue target(5.0);
+	engine::CTime::CTimeValue ticker(0.0);
 
 	while (elapsed < target)
 	{
 		rtc.Tick();
-		engine::CTimeValue tick = gc.Tick();
+		engine::CTime::CTimeValue tick = gc.Tick();
 		ticker += tick;
 		elapsed += tick;
 
@@ -148,8 +144,8 @@ int main(int argc, char* argv[])
 	printf("Starting %.02f second test...\n", TEST_LENGTH);
 
 	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
-	engine::CTimeValue start = rtc.GetCurrentTime();
-	engine::CTimeValue maxFrameTime(0.1);
+	engine::CTime::CTimeValue start = rtc.GetCurrentTime();
+	engine::CTime::CTimeValue maxFrameTime(0.1);
 	engine::CCallbackTimer ct(rtc, maxFrameTime, 1.0f, 1.0, TimerCallback, NULL);
 
 	uint32 xpos = 100;
@@ -168,11 +164,12 @@ int main(int argc, char* argv[])
 		renderer.Update();
 	}
 
-	engine::CTimeValue finish = rtc.GetCurrentTime();
+	engine::CTime::CTimeValue finish = rtc.GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	/////////////////////////////////////////////////////////////////////////////
 	*/
 
+	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// console variables test
 	uint64 test_uint64 = 0;
@@ -232,7 +229,7 @@ int main(int argc, char* argv[])
 	UNREGISTER_CONSOLE_VARIABLE(test_int64);
 	UNREGISTER_CONSOLE_VARIABLE(test_uint64);
 	/////////////////////////////////////////////////////////////////////////////
-
+*/
 	printf("All done.\n");
 
 	engine::CSystem::Uninitialise();

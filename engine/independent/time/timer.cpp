@@ -10,11 +10,11 @@ namespace engine
 {
 	//============================================================================
 
-	const CTimeValue& CTimer::Tick(void)
+	const CTime::CTimeValue& CTimer::Tick(void)
 	{
 		if (!IsPaused())
 		{
-			CTimeValue now = (m_pParent == NULL) ? CTime::RealTimeClock().GetCurrentTime() : m_pParent->GetElapsedTime();
+			CTime::CTimeValue now = (m_pParent == NULL) ? CTime::RealTimeClock().GetCurrentTime() : m_pParent->GetElapsedTime();
 			m_frameTime = static_cast<uint64>(m_scale*(now-m_lastTickTime).GetTicks());
 			m_lastTickTime = now;
 

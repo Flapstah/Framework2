@@ -3,7 +3,7 @@
 
 //==============================================================================
 
-#include "time/timevalue.h"
+#include "time/time.h"
 
 //==============================================================================
 
@@ -20,7 +20,7 @@ namespace engine
 			{
 			}
 
-			const CTimeValue GetCurrentTime(void) const;
+			const CTime::CTimeValue GetCurrentTime(void) const;
 	}; // End [class CRealTimeClock]
 
 	//============================================================================

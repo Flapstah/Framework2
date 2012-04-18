@@ -3,7 +3,7 @@
 
 //==============================================================================
 
-#include "time/timevalue.h"
+#include "time/time.h"
 #include "time/realtimeclock.h"	
 
 //==============================================================================
@@ -16,7 +16,7 @@ namespace engine
 	class CTimer
 	{
 		public:
-			CTimer(CTimer& parent, CTimeValue maxFrameTime, float scale)
+			CTimer(CTimer& parent, CTime::CTimeValue maxFrameTime, float scale)
 				: m_maxFrameTime(maxFrameTime)
 				, m_pParent(&parent)
 				,	m_referenceCount(0)
@@ -27,7 +27,7 @@ namespace engine
 				Reset();
 			}
 
-			CTimer(CRealTimeClock& parent, CTimeValue maxFrameTime, float scale)
+			CTimer(CRealTimeClock& parent, CTime::CTimeValue maxFrameTime, float scale)
 				: m_maxFrameTime(maxFrameTime)
 				, m_pParent(NULL)
 				,	m_referenceCount(0)
@@ -51,14 +51,14 @@ namespace engine
 				}
 			}
 
-			virtual const CTimeValue& Tick(void);
+			virtual const CTime::CTimeValue& Tick(void);
 
-			const CTimeValue& GetElapsedTime(void) const
+			const CTime::CTimeValue& GetElapsedTime(void) const
 			{
 				return m_elapsedTime;
 			}
 
-			const CTimeValue& GetFrameTime(void) const
+			const CTime::CTimeValue& GetFrameTime(void) const
 			{
 				return m_frameTime;
 			}
@@ -101,21 +101,21 @@ namespace engine
 				return paused;
 			}
 
-			void SetMaxFrameTime(CTimeValue maxFrameTime)
+			void SetMaxFrameTime(CTime::CTimeValue maxFrameTime)
 			{
 				m_maxFrameTime = maxFrameTime;
 			}
 
-			const CTimeValue& GetMaxFrameTime(void) const
+			const CTime::CTimeValue& GetMaxFrameTime(void) const
 			{
 				return m_maxFrameTime;
 			}
 
 		protected:
-			CTimeValue m_maxFrameTime;
-			CTimeValue m_frameTime;
-			CTimeValue m_elapsedTime;
-			CTimeValue m_lastTickTime;
+			CTime::CTimeValue m_maxFrameTime;
+			CTime::CTimeValue m_frameTime;
+			CTime::CTimeValue m_elapsedTime;
+			CTime::CTimeValue m_lastTickTime;
 			CTimer* m_pParent;
 			uint32 m_referenceCount;
 			uint32 m_frameCount;

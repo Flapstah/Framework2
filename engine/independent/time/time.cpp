@@ -12,7 +12,7 @@ namespace engine
 
 	static CRealTimeClock g_realTimeClock;
 	// The max frame time gets set properly in CTime::Init()
-	static CTimeValue g_oneTick(uint64(1));
+	static CTime::CTimeValue g_oneTick(uint64(1));
 	static CTimer g_gameClock(g_realTimeClock, g_oneTick, 1.0f);
 
 	CRealTimeClock& CTime::s_realTimeClock = g_realTimeClock;
@@ -20,7 +20,7 @@ namespace engine
 
 	// Gets set properly in CRealTimeClock constructor
 	uint64 g_platformTicksPerSecond = 1;
-	const uint64& CTimeValue::TICKS_PER_SECOND = g_platformTicksPerSecond;
+	const uint64& CTime::CTimeValue::TICKS_PER_SECOND = g_platformTicksPerSecond;
 
 	//============================================================================
 

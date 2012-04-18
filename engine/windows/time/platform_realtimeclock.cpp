@@ -20,12 +20,12 @@ namespace engine
 
 	//============================================================================
 
-	const CTimeValue CRealTimeClock::GetCurrentTime() const
+	const CTime::CTimeValue CRealTimeClock::GetCurrentTime() const
 	{
 		LARGE_INTEGER time;
 		::QueryPerformanceCounter(&time);
 
-		CTimeValue currentTime(static_cast<uint64>(time.QuadPart));
+		CTime::CTimeValue currentTime(static_cast<uint64>(time.QuadPart));
 
 		return currentTime;
 	}

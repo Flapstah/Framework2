@@ -19,12 +19,12 @@ namespace engine
 
 	//============================================================================
 
-	const CTimeValue CRealTimeClock::GetCurrentTime() const
+	const CTime::CTimeValue CRealTimeClock::GetCurrentTime() const
 	{
 		::timeval time;
 		::gettimeofday(&time, NULL);
 		
-		CTimeValue currentTime(static_cast<double>(time.tv_sec));
+		CTime::CTimeValue currentTime(static_cast<double>(time.tv_sec));
 		currentTime += static_cast<uint64>(time.tv_usec);
 
 		return currentTime;
