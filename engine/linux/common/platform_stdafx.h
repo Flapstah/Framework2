@@ -12,7 +12,7 @@
 // Check for 32 or 64 bit environment
 // Check GCC
 #if defined(__GNUC__)
-#if defined(__x84_64__) || defined(__ppc64__)
+#if defined(__x86_64__) || defined(__ppc64__)
 #define ENVIRONMENT64
 #else
 #define ENVIRONMENT32
