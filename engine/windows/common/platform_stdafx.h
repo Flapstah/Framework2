@@ -14,6 +14,15 @@
 
 #define DEBUG_BREAK DebugBreak()
 
+// Check for 32 or 64 bit environment
+#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN64)
+#define ENVIRONMENT64
+#else
+#define ENVIRONMENT32
+#endif // [defined(_WIN64)]
+#endif // [defined(_WIN32) || defined(_WIN64)]
+
 //==============================================================================
 
 #endif // End [!defined(__PLATFORM_STDAFX_H__)]

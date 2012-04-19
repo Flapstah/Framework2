@@ -33,6 +33,12 @@ void DumpArgs(int argc, char* argv[])
 
 void DumpVariableSizes(void)
 {
+#if defined(ENVIRONMENT32)
+	printf("\n32 bit environment\n\n");
+#endif // [defined(ENVIRONMENT32)]
+#if defined(ENVIRONMENT64)
+	printf("\n64 bit environment\n");
+#endif // [defined(ENVIRONMENT64)]
 	printf("*** Variable sizes:\n");
 #define PRINT_SIZE(_type_) printf(#_type_ "\t: %u\n", static_cast<uint32>(sizeof(_type_)))
 	PRINT_SIZE(int8);
@@ -47,9 +53,8 @@ void DumpVariableSizes(void)
 	PRINT_SIZE(float);
 	PRINT_SIZE(double);
 	PRINT_SIZE(size_t);
-	printf("\n__WORDSIZE = %d\n", __WORDSIZE);
 #undef PRINT_SIZE
-	printf("*** End variable sizes\n");
+	printf("*** End variable sizes\n\n");
 }
 
 //==============================================================================
@@ -91,7 +96,7 @@ int main(int argc, char* argv[])
 	IGNORE_PARAMETER(argc);
 	IGNORE_PARAMETER(argv);
 //	DumpArgs(argc, argv);
-//	DumpVariableSizes();
+	DumpVariableSizes();
 
 	engine::CSystem::Initialise();
 
@@ -107,7 +112,7 @@ int main(int argc, char* argv[])
 	TimeValueTest(value);
 	value = 604800.0;
 	TimeValueTest(value);
-	value = uint64(0xffffffffffffffffu);
+	value = DECLARE_64BIT(0xffffffffffffffffu);
 	TimeValueTest(value);
 	/////////////////////////////////////////////////////////////////////////////
 

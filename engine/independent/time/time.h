@@ -27,10 +27,10 @@ namespace engine
 				public:
 					enum eConstants
 					{
-						SECONDS_MASK	 = uint64(0x00000000ffffffffu),
-						MINUTES_MASK	 = uint64(0x0000003f00000000u),
-						HOURS_MASK		 = uint64(0x000007c000000000u),
-						DAYS_MASK			 = uint64(0xfffff80000000000u),
+						SECONDS_MASK	 = DECLARE_64BIT(0x00000000ffffffffu),
+						MINUTES_MASK	 = DECLARE_64BIT(0x0000003f00000000u),
+						HOURS_MASK		 = DECLARE_64BIT(0x000007c000000000u),
+						DAYS_MASK			 = DECLARE_64BIT(0xfffff80000000000u),
 
 						MINUTES_SHIFT	 = 32,
 						HOURS_SHIFT		 = 38,

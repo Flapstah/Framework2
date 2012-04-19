@@ -4,6 +4,17 @@
 //==============================================================================
 
 //------------------------------------------------------------------------------
+// Create environment independent 64 bit literals
+//------------------------------------------------------------------------------
+#if defined(ENVIRONMENT32)
+#define DECLARE_64BIT(_val_) (_val_##ll)
+#elif defined(ENVIRONMENT64)
+#define DECLARE_64BIT(_val_) (_val_##l)
+#else
+#error Unable to determine compilation environment (neither ENVIRONMENT32 or ENVIRONMENT64 defined)
+#endif // [defined(ENVIRONMENT32)]
+
+//------------------------------------------------------------------------------
 // Prevent copy constructor and assignment operator
 //------------------------------------------------------------------------------
 #define PREVENT_CLASS_COPY(_class_) _class_(const _class_&); _class_& operator = (const _class_&)
