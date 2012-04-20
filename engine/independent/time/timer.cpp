@@ -1,7 +1,6 @@
 #include "common/stdafx.h"
 
 #include "time/time.h"
-#include "time/realtimeclock.h"
 #include "time/timer.h"
 
 //==============================================================================
@@ -14,7 +13,7 @@ namespace engine
 	{
 		if (!IsPaused())
 		{
-			CTime::CTimeValue now = (m_pParent == NULL) ? CTime::RealTimeClock().GetCurrentTime() : m_pParent->GetElapsedTime();
+			CTime::CTimeValue now = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetElapsedTime();
 			m_frameTime = static_cast<uint64>(m_scale*(now-m_lastTickTime).GetTicks());
 			m_lastTickTime = now;
 
@@ -37,7 +36,7 @@ namespace engine
 	{
 		m_frameTime = uint64(0);
 		m_elapsedTime = uint64(0);
-		m_lastTickTime = (m_pParent == NULL) ? CTime::RealTimeClock().GetCurrentTime() : m_pParent->GetElapsedTime();
+		m_lastTickTime = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetElapsedTime();
 		m_frameCount = 0;
 	}
 

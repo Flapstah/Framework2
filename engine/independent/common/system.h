@@ -17,22 +17,24 @@ namespace engine
 	class CSystem
 	{
 		public:
-			static bool Initialise(void);
-			static void Uninitialise(void);
-
-			static CSystem* Get(void);
+			static CSystem& Get(void)
+			{
+				static CSystem instance;
+				return instance;
+			}
+			~CSystem(void);
 
 		protected:
 			CSystem(void);
-			~CSystem(void);
+			void Initialise(void);
+			void Uninitialise(void);
 
 		protected:
 #if USE_GLFW
 			CGLFW m_glfw;
 #endif // USE_GLFW
 
-			static CSystem* s_this;
-
+	//============================================================================
 	}; // End [class CSystem]
 
 	//============================================================================

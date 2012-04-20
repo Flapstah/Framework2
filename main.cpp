@@ -98,11 +98,13 @@ int main(int argc, char* argv[])
 //	DumpArgs(argc, argv);
 	DumpVariableSizes();
 
-	engine::CSystem::Initialise();
+	// This will create and initialise the CSystem singleton
+	engine::CSystem::Get();
 
 	/////////////////////////////////////////////////////////////////////////////
 	// CTimeValue tests
 	printf("sizeof(CTime::CTimeValue) is %u\n", static_cast<uint32>(sizeof(engine::CTime::CTimeValue)));
+	printf("%" PRIu64 " ticks per second\n", engine::CTime::CTimeValue::TICKS_PER_SECOND);
 
 	engine::CTime::CTimeValue value(60.0);
 	TimeValueTest(value);
@@ -237,7 +239,6 @@ int main(int argc, char* argv[])
 */
 	printf("All done.\n");
 
-	engine::CSystem::Uninitialise();
 	return 0;
 }
 

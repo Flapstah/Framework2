@@ -7,7 +7,6 @@ namespace engine
 {
 	//============================================================================
 
-	class CRealTimeClock;
 	class CTimer;
 
 	//============================================================================
@@ -16,9 +15,6 @@ namespace engine
 	class CTime
 	{
 		public:
-
-			//========================================================================
-
 			//========================================================================
 			// CTimeValue
 			//========================================================================
@@ -287,25 +283,28 @@ namespace engine
 //			static CTime* Get(void);
 			static void Sleep(uint32 microseconds);
 
-			static void Initialise(void);
-			static CRealTimeClock& RealTimeClock(void);
+			static CTime& Get(void)
+			{
+				static CTime instance;
+				return instance;
+			}
+			~CTime(void);
+
 			static CTimer& GameClock(void);
 
-		protected:
-//			CTime(void);
-//			~CTime(void);
-
-
-
-
-
-
-
-
-
+			const CTimeValue GetCurrentTime(void) const
+			{
+				return Platform_GetCurrentTime();
+			}
 
 		protected:
-			static CRealTimeClock& s_realTimeClock;
+			CTime(void);
+
+			void Initialise(void);
+			void Platform_Initialise(void);
+			const CTimeValue Platform_GetCurrentTime(void) const;
+
+		protected:
 			static CTimer& s_gameTimer;
 	}; // End [class CTime]
 

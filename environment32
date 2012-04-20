@@ -1,0 +1,31 @@
+
+32 bit environment
+
+*** Variable sizes:
+int8	: 1
+int16	: 2
+int32	: 4
+int64	: 8
+uint8	: 1
+uint16	: 2
+uint32	: 4
+uint64	: 8
+bool	: 1
+float	: 4
+double	: 8
+size_t	: 4
+*** End variable sizes
+
+sizeof(CTime::CTimeValue) is 8
+2240205 ticks per second
+Time 60.000s
+0 days, 00:01:00.000s
+Time 3600.000s
+0 days, 01:00:00.000s
+Time 86400.000s
+1 days, 00:00:00.000s
+Time 604800.000s
+7 days, 00:00:00.000s
+Time 8234400009690.877s
+95305555 days, 16:01:30.877s
+All done.

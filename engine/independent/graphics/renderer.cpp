@@ -44,7 +44,7 @@ namespace engine
 	//============================================================================
 
 	CRenderer::CRenderer(uint32 width, uint32 height, const char* title, float frameRate)
-		: m_timer(engine::CTime::RealTimeClock(), CTime::CTimeValue(), 1.0f, 0.0, CRenderer::Callback, this)
+		: m_timer(CTime::CTimeValue(), 1.0f, 0.0, CRenderer::Callback, this)
 		, m_width(width)
 		, m_height(height)
 		, m_consoleStartYPos(0)

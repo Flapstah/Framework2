@@ -4,7 +4,6 @@
 //==============================================================================
 
 #include "time/time.h"
-#include "time/realtimeclock.h"	
 
 //==============================================================================
 
@@ -27,14 +26,13 @@ namespace engine
 				Reset();
 			}
 
-			CTimer(CRealTimeClock& parent, CTime::CTimeValue maxFrameTime, float scale)
+			CTimer(CTime::CTimeValue maxFrameTime, float scale)
 				: m_maxFrameTime(maxFrameTime)
 				, m_pParent(NULL)
 				,	m_referenceCount(0)
 				, m_scale(scale)
 				, m_paused(false)
 			{
-				IGNORE_PARAMETER(parent);
 				Reset();
 			}
 

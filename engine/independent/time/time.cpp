@@ -1,7 +1,6 @@
 #include "common/stdafx.h"
 
 #include "time/time.h"
-#include "time/realtimeclock.h"
 #include "time/timer.h"
 
 //==============================================================================
@@ -10,12 +9,10 @@ namespace engine
 {
 	//============================================================================
 
-	static CRealTimeClock g_realTimeClock;
 	// The max frame time gets set properly in CTime::Init()
 	static CTime::CTimeValue g_oneTick(uint64(1));
-	static CTimer g_gameClock(g_realTimeClock, g_oneTick, 1.0f);
+	static CTimer g_gameClock(g_oneTick, 1.0f);
 
-	CRealTimeClock& CTime::s_realTimeClock = g_realTimeClock;
 	CTimer& CTime::s_gameTimer = g_gameClock;
 
 	// Gets set properly in CRealTimeClock constructor
@@ -24,17 +21,24 @@ namespace engine
 
 	//============================================================================
 
-	CRealTimeClock& CTime::RealTimeClock(void)
+	CTime::CTime(void)
 	{
-		return s_realTimeClock;
+		Initialise();
 	}
 
 	//============================================================================
 
+	CTime::~CTime(void)
+	{
+	}
+
+	//============================================================================
 
 	void CTime::Initialise(void)
 	{
-		// The OS ticks per second are set in CRealTimeClock's constructor, so now
+		Platform_Initialise();
+
+		// The OS ticks per second are set in Platform_Initialise, so now
 		// we can set the default maximum frame time of the game clock sensibly.
 		CTimeValue oneTenthOfASecond(0.1);
 		g_gameClock.SetMaxFrameTime(oneTenthOfASecond);
