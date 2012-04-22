@@ -3,12 +3,12 @@
 #include <GL/glfw.h>
 
 #include "time/callbacktimer.h"
-//#include "time/time.h"
+#include "time/time.h"
 //#include "time/realtimeclock.h"
 //#include "time/timer.h"
 
-//#include "graphics/renderer.h"
-//#include "input/keyboard.h"
+#include "graphics/renderer.h"
+#include "input/keyboard.h"
 
 #include "common/console.h"
 #include "common/system.h"
@@ -96,11 +96,12 @@ int main(int argc, char* argv[])
 	IGNORE_PARAMETER(argc);
 	IGNORE_PARAMETER(argv);
 //	DumpArgs(argc, argv);
-	DumpVariableSizes();
+//	DumpVariableSizes();
 
 	// This will create and initialise the CSystem singleton
 	engine::CSystem::Get();
 
+	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CTimeValue tests
 	printf("sizeof(CTime::CTimeValue) is %u\n", static_cast<uint32>(sizeof(engine::CTime::CTimeValue)));
@@ -117,20 +118,20 @@ int main(int argc, char* argv[])
 	value = DECLARE_64BIT(0xffffffffffffffffu);
 	TimeValueTest(value);
 	/////////////////////////////////////////////////////////////////////////////
+	*/
 
 	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CRealTimeClock test
-	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
-	engine::CTimer& gc = engine::CTime::GameClock();
+	engine::CTime::CTimer& gc = engine::CTime::Get().GameClock();
+	gc.Update();
 	engine::CTime::CTimeValue elapsed(0.0);
 	engine::CTime::CTimeValue target(5.0);
 	engine::CTime::CTimeValue ticker(0.0);
 
 	while (elapsed < target)
 	{
-		rtc.Tick();
-		engine::CTime::CTimeValue tick = gc.Tick();
+		engine::CTime::CTimeValue tick = gc.Update();
 		ticker += tick;
 		elapsed += tick;
 
@@ -143,17 +144,14 @@ int main(int argc, char* argv[])
 	/////////////////////////////////////////////////////////////////////////////
 	*/
 
-	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// callback timer and renderer test
 	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
 
 	printf("Starting %.02f second test...\n", TEST_LENGTH);
 
-	engine::CRealTimeClock& rtc = engine::CTime::RealTimeClock();
-	engine::CTime::CTimeValue start = rtc.GetCurrentTime();
-	engine::CTime::CTimeValue maxFrameTime(0.1);
-	engine::CCallbackTimer ct(rtc, maxFrameTime, 1.0f, 1.0, TimerCallback, NULL);
+	engine::CTime::CTimeValue start = engine::CTime::Get().GetCurrentTime();
+	engine::CCallbackTimer ct(0.1f, 1.0f, 1.0, TimerCallback, NULL);
 
 	uint32 xpos = 100;
 	xpos += renderer.Print(100, xpos, 0x00ffffff, 0, "Andrew");
@@ -166,15 +164,14 @@ int main(int argc, char* argv[])
 
 	while (ct.IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
 	{
-		ct.Tick();
+		ct.Update();
 		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
 		renderer.Update();
 	}
 
-	engine::CTime::CTimeValue finish = rtc.GetCurrentTime();
+	engine::CTime::CTimeValue finish = engine::CTime::Get().GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	/////////////////////////////////////////////////////////////////////////////
-	*/
 
 	/*
 	/////////////////////////////////////////////////////////////////////////////
@@ -236,7 +233,8 @@ int main(int argc, char* argv[])
 	UNREGISTER_CONSOLE_VARIABLE(test_int64);
 	UNREGISTER_CONSOLE_VARIABLE(test_uint64);
 	/////////////////////////////////////////////////////////////////////////////
-*/
+	*/
+
 	printf("All done.\n");
 
 	return 0;

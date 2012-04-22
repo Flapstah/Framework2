@@ -44,7 +44,7 @@ namespace engine
 	//============================================================================
 
 	CRenderer::CRenderer(uint32 width, uint32 height, const char* title, float frameRate)
-		: m_timer(CTime::CTimeValue(), 1.0f, 0.0, CRenderer::Callback, this)
+		: m_timer(0.1f, 1.0f, 0.0, CRenderer::Callback, this)
 		, m_width(width)
 		, m_height(height)
 		, m_consoleStartYPos(0)
@@ -92,7 +92,6 @@ namespace engine
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-		m_timer.SetMaxFrameTime(CTime::CTimeValue(0.1));
 		m_timer.SetInterval(1.0/m_frameRate);
 	}
 
@@ -111,7 +110,7 @@ namespace engine
 
 	bool CRenderer::Update(void)
 	{
-		m_timer.Tick();
+		m_timer.Update();
 		return m_timer.IsActive();
 	}
 

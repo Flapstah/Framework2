@@ -278,6 +278,89 @@ namespace engine
 					static const uint64& TICKS_PER_SECOND;
 			}; // End [class CTimeValue]
 
+			//========================================================================
+			// CTimer
+			//========================================================================
+			class CTimer
+			{
+				public:
+					CTimer(float maxFrameTime, float scale)
+						: m_pParent(NULL)
+						, m_maxFrameTime(maxFrameTime)
+						, m_scale(scale)
+					{
+					}
+
+					CTimer(CTimer& parent, float maxFrameTime, float scale)
+						: m_pParent(&parent)
+						, m_maxFrameTime(maxFrameTime)
+						, m_scale(scale)
+					{
+					}
+
+					~CTimer(void)
+					{
+					}
+
+					CTimeValue GetCurrentTime(void) const
+					{
+						return m_timeNow;
+					}
+
+					CTimeValue GetElapsedTime(void) const
+					{
+						return m_timeElapsed;
+					}
+
+					CTimeValue GetFrameTime(void) const
+					{
+						return (m_timeNow-m_timeLast);
+					}
+
+					void SetScale(float scale)
+					{
+						m_scale = scale;
+					}
+
+					float GetScale(void) const
+					{
+						return m_scale;
+					}
+
+					// TODO: deal with pausing
+
+					const CTimeValue Update(void)
+					{
+						m_timeLast = m_timeNow;
+						m_timeNow = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetCurrentTime();
+
+						CTimeValue frameTime = GetFrameTime();
+						if (frameTime.GetSeconds() > m_maxFrameTime)
+						{
+							m_timeLast = m_timeNow-CTimeValue(m_maxFrameTime);
+						}
+
+						m_timeElapsed += frameTime;
+						return frameTime;
+					}
+
+					void Reset(void)
+					{
+						m_timeNow = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetCurrentTime();
+						m_timeLast = m_timeNow;
+						m_timeElapsed = uint64(DECLARE_64BIT(0));
+					}
+
+				protected:
+					CTimer* m_pParent;
+					CTimeValue m_timeNow;
+					CTimeValue m_timeLast;
+					CTimeValue m_timeElapsed;
+					float m_maxFrameTime;
+					float m_scale;
+					bool m_paused;
+			}; // End [class CTimer]
+
 		public:
 			// Get the singleton instance
 //			static CTime* Get(void);
@@ -290,7 +373,10 @@ namespace engine
 			}
 			~CTime(void);
 
-			static CTimer& GameClock(void);
+			CTimer& GameClock(void)
+			{
+				return m_gameTimer;
+			}
 
 			const CTimeValue GetCurrentTime(void) const
 			{
@@ -305,7 +391,7 @@ namespace engine
 			const CTimeValue Platform_GetCurrentTime(void) const;
 
 		protected:
-			static CTimer& s_gameTimer;
+			CTimer m_gameTimer;
 	}; // End [class CTime]
 
 	//============================================================================

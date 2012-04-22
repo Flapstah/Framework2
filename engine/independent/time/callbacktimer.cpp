@@ -8,11 +8,11 @@ namespace engine
 {
 	//============================================================================
 
-	const CTime::CTimeValue& CCallbackTimer::Tick(void)
+	const CTime::CTimeValue CCallbackTimer::Update(void)
 	{
 		if (m_active)
 		{
-			m_ticker += PARENT::Tick();
+			m_ticker += PARENT::Update();
 
 			if (m_ticker >= m_interval)
 			{
@@ -21,7 +21,7 @@ namespace engine
 			}
 		}
 
-		return m_frameTime;
+		return PARENT::GetFrameTime();
 	}
 
 	//============================================================================

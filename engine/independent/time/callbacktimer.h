@@ -3,7 +3,7 @@
 
 //==============================================================================
 
-#include "time/timer.h"
+#include "time/time.h"
 
 //==============================================================================
 
@@ -12,69 +12,55 @@ namespace engine
 	//============================================================================
 	// CCallbackTimer
 	//============================================================================
-	class CCallbackTimer : public CTimer
+	class CCallbackTimer : public CTime::CTimer
 	{
-		typedef CTimer PARENT;
+		typedef CTime::CTimer PARENT;
 
 		public:
 			typedef bool (*Callback)(CCallbackTimer*, void*);
 
-			CCallbackTimer(CTimer& parent, CTime::CTimeValue maxFrameTime, float scale, CTime::CTimeValue interval, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CTime::CTimer& parent, float maxFrameTime, float scale, CTime::CTimeValue interval, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(interval)
 				, m_pCallback(pCallback)
 				, m_pUserData(pUserData)
 				, m_active(true)
 			{
+				Reset();
 			}
 
-			CCallbackTimer(CTimer& parent, CTime::CTimeValue maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+			CCallbackTimer(CTime::CTimer& parent, float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
 				: CTimer(parent, maxFrameTime, scale)
 				, m_interval(intervalInSeconds)
 				, m_pCallback(pCallback)
 				, m_pUserData(pUserData)
 				, m_active(true)
 			{
+				Reset();
 			}
 
-			CCallbackTimer(CTimer& parent, CTime::CTimeValue maxFrameTime, float scale, uint64 intervalInTicks, Callback pCallback, void* const pUserData)
-				: CTimer(parent, maxFrameTime, scale)
-				, m_interval(intervalInTicks)
-				, m_pCallback(pCallback)
-				, m_pUserData(pUserData)
-				, m_active(true)
-			{
-			}
-
-			CCallbackTimer(CTime::CTimeValue maxFrameTime, float scale, CTime::CTimeValue interval, Callback pCallback, void* const pUserData)
+			CCallbackTimer(float maxFrameTime, float scale, CTime::CTimeValue interval, Callback pCallback, void* const pUserData)
 				: CTimer(maxFrameTime, scale)
 				, m_interval(interval)
 				, m_pCallback(pCallback)
 				, m_pUserData(pUserData)
 				, m_active(true)
 			{
+				Reset();
 			}
 
-			CCallbackTimer(CTime::CTimeValue maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+			CCallbackTimer(float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
 				: CTimer(maxFrameTime, scale)
 				, m_interval(intervalInSeconds)
 				, m_pCallback(pCallback)
 				, m_pUserData(pUserData)
 				, m_active(true)
 			{
-			}
-
-			CCallbackTimer(CTime::CTimeValue maxFrameTime, float scale, uint64 intervalInTicks, Callback pCallback, void* const pUserData)
-				: CTimer(maxFrameTime, scale)
-				, m_interval(intervalInTicks)
-				, m_pCallback(pCallback)
-				, m_pUserData(pUserData)
-				, m_active(true)
-			{
+				Reset();
 			}
 
 			// ITimer
-			virtual const CTime::CTimeValue& Tick(void);
+			virtual const CTime::CTimeValue Update(void);
 			// ~ITimer
 
 			void SetInterval(CTime::CTimeValue interval)
