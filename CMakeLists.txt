@@ -30,7 +30,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 # Compiler flags
 #set(LINK_FLAGS "-g")
 #set(CMAKE_CXX_FLAGS "-g")
-set (CMAKE_CXX_FLAGS "-fopenmp -Wall")
+set (CMAKE_CXX_WARNING_LEVEL 4)
+if (WIN32)
+set (CMAKE_CXX_FLAGS "-fopenmp")
+endif (WIN32)
+if (UNIX)
+set (CMAKE_CXX_FLAGS "-fopenmp -Wall -Wextra -Wshadow -Wunused -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -pedantic -pedantic-errors")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+endif (UNIX)
 
 # Platform includes
 set(PLATFORM_INCLUDES "${test_SOURCE_DIR}/engine/independent")
@@ -85,11 +92,13 @@ set(PLATFORM_INDEPENDENT_SOURCES
 	)
 if (WIN32)
 set(PLATFORM_SPECIFIC_SOURCES
+ 	engine/windows/common/platform_system.cpp
  	engine/windows/time/platform_time.cpp
 	)
 endif (WIN32)
 if (UNIX)
 set(PLATFORM_SPECIFIC_SOURCES
+ 	engine/linux/common/platform_system.cpp
  	engine/linux/time/platform_time.cpp
 	)
 endif (UNIX)

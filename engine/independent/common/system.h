@@ -24,10 +24,14 @@ namespace engine
 			}
 			~CSystem(void);
 
+			void LogCallstack(uint32 maxDepth);
+
 		protected:
 			CSystem(void);
 			void Initialise(void);
 			void Uninitialise(void);
+
+			void Platform_LogCallstack(uint32 maxDepth);
 
 		protected:
 #if USE_GLFW
