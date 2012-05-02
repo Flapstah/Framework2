@@ -283,7 +283,20 @@ namespace engine
 			//========================================================================
 			class CTimer
 			{
+				enum eDefaultValues
+				{
+					eDV_SCALE = 1,
+					eDV_RECIPROCALMAXFRAMETIME = 10
+				}; // End [enum eDefaultValues]
+
 				public:
+					CTimer(void)
+						: m_pParent(NULL)
+						, m_maxFrameTime(1.0f/eDV_RECIPROCALMAXFRAMETIME)
+						, m_scale(eDV_SCALE)
+					{
+					}
+
 					CTimer(float maxFrameTime, float scale)
 						: m_pParent(NULL)
 						, m_maxFrameTime(maxFrameTime)
@@ -317,6 +330,16 @@ namespace engine
 						return (m_timeNow-m_timeLast);
 					}
 
+					float GetMaxFrameTime(void) const
+					{
+						return m_maxFrameTime;
+					}
+
+					void SetMaxFrameTime(float maxFrameTime)
+					{
+						m_maxFrameTime = maxFrameTime;
+					}
+
 					void SetScale(float scale)
 					{
 						m_scale = scale;
@@ -346,10 +369,16 @@ namespace engine
 
 					void Reset(void)
 					{
-						m_timeNow = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetCurrentTime();
+						Reset((m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetCurrentTime());
+					}
+
+					void Reset(const CTimeValue& when)
+					{
+						m_timeNow = when;
 						m_timeLast = m_timeNow;
 						m_timeElapsed = uint64(DECLARE_64BIT(0));
 					}
+
 
 				protected:
 					CTimer* m_pParent;
@@ -363,15 +392,14 @@ namespace engine
 
 		public:
 			// Get the singleton instance
-//			static CTime* Get(void);
-			static void Sleep(uint32 microseconds);
-
 			static CTime& Get(void)
 			{
 				static CTime instance;
 				return instance;
 			}
 			~CTime(void);
+
+			static void Sleep(uint32 microseconds);
 
 			CTimer& GameClock(void)
 			{
@@ -382,6 +410,7 @@ namespace engine
 			{
 				return Platform_GetCurrentTime();
 			}
+
 
 		protected:
 			CTime(void);

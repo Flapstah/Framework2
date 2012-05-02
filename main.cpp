@@ -120,30 +120,26 @@ int main(int argc, char* argv[])
 	/////////////////////////////////////////////////////////////////////////////
 	*/
 
-	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CRealTimeClock test
 	engine::CTime::CTimer& gc = engine::CTime::Get().GameClock();
-	gc.Update();
-	engine::CTime::CTimeValue elapsed(0.0);
-	engine::CTime::CTimeValue target(5.0);
+	engine::CTime::CTimeValue target(TEST_LENGTH);
 	engine::CTime::CTimeValue ticker(0.0);
 
-	while (elapsed < target)
+	while (gc.GetElapsedTime() < target)
 	{
 		engine::CTime::CTimeValue tick = gc.Update();
 		ticker += tick;
-		elapsed += tick;
 
 		if (ticker >= 1.0)
 		{
-			printf("%fs elapsed\n", elapsed.GetSeconds());
+			printf("%fs elapsed\n", gc.GetElapsedTime().GetSeconds());
 			ticker -= 1.0;
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////
-	*/
 
+	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// callback timer and renderer test
 	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
@@ -172,6 +168,7 @@ int main(int argc, char* argv[])
 	engine::CTime::CTimeValue finish = engine::CTime::Get().GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	/////////////////////////////////////////////////////////////////////////////
+	*/
 
 	/*
 	/////////////////////////////////////////////////////////////////////////////

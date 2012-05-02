@@ -15,7 +15,6 @@ namespace engine
 	//============================================================================
 
 	CTime::CTime(void)
-		: m_gameTimer(0.1f, 1.0f)
 	{
 		Initialise();
 	}
@@ -31,8 +30,13 @@ namespace engine
 	void CTime::Initialise(void)
 	{
 		Platform_Initialise();
-// TODO: Why does this cause infinite loop?
-//		m_gameTimer.Reset();
+
+		// Make sure the game timer is reset to "now".  N.B. Can't do Reset() here
+		// because CTimer::Reset() for the game timer will call CTime::Get()...and
+		// we're currently in the constructor flow for the original CTime::Get()...
+		// which causes a segmentation fault when compiled with GCC (but not Visual
+		// Studio oddly).
+		m_gameTimer.Reset(GetCurrentTime());
 	}
 
 	//============================================================================
