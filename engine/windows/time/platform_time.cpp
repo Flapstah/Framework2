@@ -27,7 +27,7 @@ namespace engine
 		LARGE_INTEGER time;
 		::QueryPerformanceCounter(&time);
 
-		CTime::CTimeValue currentTime(static_cast<uint64>(time.QuadPart));
+		CTime::CTimeValue currentTime(static_cast<int64>(time.QuadPart));
 
 		return currentTime;
 	}

@@ -9,8 +9,8 @@ namespace engine
 	//============================================================================
 
 	// Gets set properly in CRealTimeClock constructor
-	uint64 g_platformTicksPerSecond = 1;
-	const uint64& CTime::CTimeValue::TICKS_PER_SECOND = g_platformTicksPerSecond;
+	int64 g_platformTicksPerSecond = 1;
+	const int64& CTime::CTimeValue::TICKS_PER_SECOND = g_platformTicksPerSecond;
 
 	//============================================================================
 

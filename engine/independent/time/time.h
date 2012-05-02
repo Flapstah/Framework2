@@ -23,6 +23,7 @@ namespace engine
 				public:
 					enum eConstants
 					{
+						INVALID_TIME	 = DECLARE_64BIT(0xf000000000000000),
 						SECONDS_MASK	 = DECLARE_64BIT(0x00000000ffffffffu),
 						MINUTES_MASK	 = DECLARE_64BIT(0x0000003f00000000u),
 						HOURS_MASK		 = DECLARE_64BIT(0x000007c000000000u),
@@ -39,13 +40,13 @@ namespace engine
 					{
 					}
 
-					explicit CTimeValue(uint64 ticks)
+					explicit CTimeValue(int64 ticks)
 						: m_ticks(ticks)
 					{
 					}
 
 					explicit CTimeValue(double seconds)
-						: m_ticks(static_cast<uint64>(seconds*TICKS_PER_SECOND))
+						: m_ticks(static_cast<int64>(seconds*TICKS_PER_SECOND))
 					{
 					}
 
@@ -62,11 +63,11 @@ namespace engine
 
 					CTimeValue& operator=(double seconds)
 					{
-						m_ticks = static_cast<uint64>(seconds*TICKS_PER_SECOND);
+						m_ticks = static_cast<int64>(seconds*TICKS_PER_SECOND);
 						return *this;
 					}
 
-					CTimeValue& operator=(uint64 ticks)
+					CTimeValue& operator=(int64 ticks)
 					{
 						m_ticks = ticks;
 						return *this;
@@ -80,11 +81,11 @@ namespace engine
 
 					CTimeValue& operator+=(double seconds)
 					{
-						m_ticks += static_cast<uint64>(seconds*TICKS_PER_SECOND);
+						m_ticks += static_cast<int64>(seconds*TICKS_PER_SECOND);
 						return *this;
 					}
 
-					CTimeValue& operator+=(uint64 ticks)
+					CTimeValue& operator+=(int64 ticks)
 					{
 						m_ticks += ticks;
 						return *this;
@@ -98,11 +99,11 @@ namespace engine
 
 					CTimeValue& operator-=(double seconds)
 					{
-						m_ticks -= static_cast<uint64>(seconds*TICKS_PER_SECOND);
+						m_ticks -= static_cast<int64>(seconds*TICKS_PER_SECOND);
 						return *this;
 					}
 
-					CTimeValue& operator-=(uint64 ticks)
+					CTimeValue& operator-=(int64 ticks)
 					{
 						m_ticks -= ticks;
 						return *this;
@@ -120,7 +121,7 @@ namespace engine
 						return result;
 					}
 
-					const CTimeValue operator+(uint64 ticks) const
+					const CTimeValue operator+(int64 ticks) const
 					{
 						CTimeValue result(m_ticks+ticks);
 						return result;
@@ -138,7 +139,7 @@ namespace engine
 						return result;
 					}
 
-					const CTimeValue operator-(uint64 ticks) const
+					const CTimeValue operator-(int64 ticks) const
 					{
 						CTimeValue result(m_ticks-ticks);
 						return result;
@@ -154,9 +155,24 @@ namespace engine
 						return (m_ticks == seconds*TICKS_PER_SECOND);
 					}
 
-					bool operator==(uint64 ticks) const
+					bool operator==(int64 ticks) const
 					{
 						return (m_ticks == ticks);
+					}
+
+					bool operator!=(const CTimeValue& other) const
+					{
+						return (m_ticks != other.m_ticks);
+					}
+
+					bool operator!=(double seconds) const
+					{
+						return (m_ticks != seconds*TICKS_PER_SECOND);
+					}
+
+					bool operator!=(int64 ticks) const
+					{
+						return (m_ticks != ticks);
 					}
 
 					bool operator<(const CTimeValue& other) const
@@ -169,7 +185,7 @@ namespace engine
 						return (m_ticks < seconds*TICKS_PER_SECOND);
 					}
 
-					bool operator<(uint64 ticks) const
+					bool operator<(int64 ticks) const
 					{
 						return (m_ticks < ticks);
 					}
@@ -184,7 +200,7 @@ namespace engine
 						return (m_ticks <= seconds*TICKS_PER_SECOND);
 					}
 
-					bool operator<=(uint64 ticks) const
+					bool operator<=(int64 ticks) const
 					{
 						return (m_ticks <= ticks);
 					}
@@ -199,7 +215,7 @@ namespace engine
 						return (m_ticks > seconds*TICKS_PER_SECOND);
 					}
 
-					bool operator>(uint64 ticks) const
+					bool operator>(int64 ticks) const
 					{
 						return (m_ticks > ticks);
 					}
@@ -212,9 +228,9 @@ namespace engine
 					bool operator>=(double seconds) const
 					{
 						return (m_ticks >= seconds*TICKS_PER_SECOND);
-					}
+					}	
 
-					bool operator>=(uint64 ticks) const
+					bool operator>=(int64 ticks) const
 					{
 						return (m_ticks >= ticks);
 					}
@@ -224,36 +240,36 @@ namespace engine
 						return static_cast<double>(m_ticks)/TICKS_PER_SECOND;
 					}
 
-					uint64 GetTicks(void) const
+					int64 GetTicks(void) const
 					{
 						return m_ticks;
 					}
 
-					uint64 GetTime(void) const
+					int64 GetTime(void) const
 					{
-						uint64 time = m_ticks;
+						int64 time = m_ticks;
 
-						uint64 unit = TICKS_PER_SECOND*60*60*24; // ticks per day
-						uint64 days = time/unit;
+						int64 unit = TICKS_PER_SECOND*60*60*24; // ticks per day
+						int64 days = time/unit;
 						time -= days*unit;
 
 						unit /= 24; // ticks per hour
-						uint64 hours = time/unit;
+						int64 hours = time/unit;
 						time -= hours*unit;
 
 						unit /= 60; // ticks per minute
-						uint64 minutes = time/unit;
+						int64 minutes = time/unit;
 						time -= minutes*unit;
 
 						time |= (days<<DAYS_SHIFT) | (hours<<HOURS_SHIFT) | (minutes<<MINUTES_SHIFT);
 						return time;
 					}
 
-					void GetTime(uint32& days, uint32& hours, uint32& minutes, float& seconds)
+					void GetTime(int32& days, int32& hours, int32& minutes, float& seconds)
 					{
-						uint64 time = m_ticks;
+						int64 time = m_ticks;
 
-						uint64 unit = TICKS_PER_SECOND*60*60*24; // ticks per day
+						int64 unit = TICKS_PER_SECOND*60*60*24; // ticks per day
 						days = time/unit;
 						time -= unit*days;
 
@@ -266,16 +282,16 @@ namespace engine
 						seconds = static_cast<float>(time-(unit*minutes))/TICKS_PER_SECOND;
 					}
 
-					static double GetSeconds(uint64 ticks)
+					static double GetSeconds(int64 ticks)
 					{
 						return static_cast<double>(ticks)/TICKS_PER_SECOND;
 					}
 
 				protected:
-					uint64 m_ticks;
+					int64 m_ticks;
 
 				public:
-					static const uint64& TICKS_PER_SECOND;
+					static const int64& TICKS_PER_SECOND;
 			}; // End [class CTimeValue]
 			//========================================================================
 
@@ -377,7 +393,7 @@ namespace engine
 					{
 						m_timeNow = when;
 						m_timeLast = m_timeNow;
-						m_timeElapsed = uint64(DECLARE_64BIT(0));
+						m_timeElapsed = DECLARE_64BIT(0);
 					}
 
 
@@ -450,11 +466,6 @@ namespace engine
 					m_interval = intervalInSeconds;
 				}
 
-				void SetInterval(uint64 intervalInTicks)
-				{
-					m_interval = intervalInTicks;
-				}
-
 				const CTime::CTimeValue& GetInterval(void)
 				{
 					return m_interval;
@@ -499,7 +510,6 @@ namespace engine
 			{
 				return Platform_GetCurrentTime();
 			}
-
 
 		protected:
 			CTime(void);

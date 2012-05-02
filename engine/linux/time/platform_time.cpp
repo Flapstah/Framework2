@@ -17,7 +17,7 @@ namespace engine
 	
 	void CTime::Platform_Initialise(void)
 	{
-		g_platformTicksPerSecond = 1000000;
+		g_platformTicksPerSecond = DECLARE_64BIT(1000000);
 	}
 
 	//============================================================================
@@ -28,7 +28,7 @@ namespace engine
 		::gettimeofday(&time, NULL);
 		
 		CTime::CTimeValue currentTime(static_cast<double>(time.tv_sec));
-		currentTime += static_cast<uint64>(time.tv_usec);
+		currentTime += static_cast<int64>(time.tv_usec);
 
 		return currentTime;
 	}

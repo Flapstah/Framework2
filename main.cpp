@@ -62,11 +62,11 @@ void TimeValueTest(engine::CTime::CTimeValue value)
 {
 	printf("Time %06.3fs\n", value.GetSeconds());
 
-	uint32 days, hours, minutes;
+	int32 days, hours, minutes;
 	float seconds;
 	value.GetTime(days, hours, minutes, seconds);
 
-	printf("%u days, %02u:%02u:%06.3fs\n", days, hours, minutes, seconds);
+	printf("%d days, %02u:%02u:%06.3fs\n", days, abs(hours), abs(minutes), fabs(seconds));
 }
 
 //==============================================================================
@@ -114,7 +114,9 @@ int main(int argc, char* argv[])
 	TimeValueTest(value);
 	value = 604800.0;
 	TimeValueTest(value);
-	value = DECLARE_64BIT(0xffffffffffffffffu);
+	value = -1.0;
+	TimeValueTest(value);
+	value = int64(DECLARE_64BIT(0xf000000000000000));
 	TimeValueTest(value);
 	/////////////////////////////////////////////////////////////////////////////
 	*/

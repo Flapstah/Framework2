@@ -13,6 +13,7 @@
 // TODO: reference additional headers your program requires here
 //#include <assert.h>
 #include <time.h>
+#include <math.h>
 
 #include "common/config.h"
 #include "common/types.h"
