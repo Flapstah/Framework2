@@ -277,6 +277,7 @@ namespace engine
 				public:
 					static const uint64& TICKS_PER_SECOND;
 			}; // End [class CTimeValue]
+			//========================================================================
 
 			//========================================================================
 			// CTimer
@@ -389,6 +390,94 @@ namespace engine
 					float m_scale;
 					bool m_paused;
 			}; // End [class CTimer]
+			//========================================================================
+
+			//========================================================================
+			// CCallbackTimer
+			//========================================================================
+			class CCallbackTimer : public CTimer
+			{
+				typedef CTime::CTimer PARENT;
+
+				public:
+				typedef bool (*Callback)(CCallbackTimer*, void*);
+
+				CCallbackTimer(CTime::CTimer& parent, float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+					: CTimer(parent, maxFrameTime, scale)
+						, m_interval(intervalInSeconds)
+						 , m_pCallback(pCallback)
+						 , m_pUserData(pUserData)
+						 , m_active(true)
+				{
+					Reset();
+				}
+
+				CCallbackTimer(float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+					: CTimer(maxFrameTime, scale)
+						, m_interval(intervalInSeconds)
+						 , m_pCallback(pCallback)
+						 , m_pUserData(pUserData)
+						 , m_active(true)
+				{
+					Reset();
+				}
+
+				// CTimer
+				virtual const CTime::CTimeValue Update(void)
+				{
+					if (m_active)
+					{
+						m_ticker += PARENT::Update();
+
+						if (m_ticker >= m_interval)
+						{
+							m_active = m_pCallback(this, m_pUserData);
+							m_ticker -= m_interval;
+						}
+					}
+
+					return PARENT::GetFrameTime();
+				}
+				// ~CTimer
+
+				void SetInterval(CTime::CTimeValue interval)
+				{
+					m_interval = interval;
+				}
+
+				void SetInterval(double intervalInSeconds)
+				{
+					m_interval = intervalInSeconds;
+				}
+
+				void SetInterval(uint64 intervalInTicks)
+				{
+					m_interval = intervalInTicks;
+				}
+
+				const CTime::CTimeValue& GetInterval(void)
+				{
+					return m_interval;
+				}
+
+				void SetActive(bool active)
+				{
+					m_active = active;
+				}
+
+				bool IsActive(void) const
+				{
+					return m_active;
+				}
+
+				protected:
+				CTimeValue m_interval;
+				CTimeValue m_ticker;
+				Callback m_pCallback;
+				void* const m_pUserData;
+				bool m_active;
+			}; // End [class CCallbakcTimer]
+			//========================================================================
 
 		public:
 			// Get the singleton instance

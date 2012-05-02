@@ -2,7 +2,6 @@
 
 #include <GL/glfw.h>
 
-#include "time/callbacktimer.h"
 #include "time/time.h"
 //#include "time/realtimeclock.h"
 //#include "time/timer.h"
@@ -72,7 +71,7 @@ void TimeValueTest(engine::CTime::CTimeValue value)
 
 //==============================================================================
 
-bool TimerCallback(engine::CCallbackTimer* pTimer, void* pUserData)
+bool TimerCallback(engine::CTime::CCallbackTimer* pTimer, void* pUserData)
 {
 	IGNORE_PARAMETER(pUserData);
 
@@ -120,6 +119,7 @@ int main(int argc, char* argv[])
 	/////////////////////////////////////////////////////////////////////////////
 	*/
 
+	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CRealTimeClock test
 	engine::CTime::CTimer& gc = engine::CTime::Get().GameClock();
@@ -138,8 +138,8 @@ int main(int argc, char* argv[])
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////////
+	*/
 
-	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// callback timer and renderer test
 	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
@@ -147,7 +147,7 @@ int main(int argc, char* argv[])
 	printf("Starting %.02f second test...\n", TEST_LENGTH);
 
 	engine::CTime::CTimeValue start = engine::CTime::Get().GetCurrentTime();
-	engine::CCallbackTimer ct(0.1f, 1.0f, 1.0, TimerCallback, NULL);
+	engine::CTime::CCallbackTimer ct(0.1f, 1.0f, 1.0, TimerCallback, NULL);
 
 	uint32 xpos = 100;
 	xpos += renderer.Print(100, xpos, 0x00ffffff, 0, "Andrew");
@@ -168,7 +168,6 @@ int main(int argc, char* argv[])
 	engine::CTime::CTimeValue finish = engine::CTime::Get().GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	/////////////////////////////////////////////////////////////////////////////
-	*/
 
 	/*
 	/////////////////////////////////////////////////////////////////////////////

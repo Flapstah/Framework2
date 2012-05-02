@@ -87,7 +87,6 @@ set(PLATFORM_INDEPENDENT_SOURCES
 	engine/independent/graphics/debugfont.cpp
 	engine/independent/graphics/renderer.cpp
 	engine/independent/input/keyboard.cpp
-	engine/independent/time/callbacktimer.cpp
 	engine/independent/time/time.cpp
 	)
 if (WIN32)

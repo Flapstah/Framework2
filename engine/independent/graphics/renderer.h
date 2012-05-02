@@ -3,7 +3,6 @@
 
 //==============================================================================
 
-#include "time/callbacktimer.h"
 #include "graphics/debugfont.h"
 
 //==============================================================================
@@ -26,7 +25,7 @@ namespace engine
 			bool IsConsoleActive(void) const;
 
 		protected:
-			static bool Callback(engine::CCallbackTimer* pTimer, void* pUserData);
+			static bool Callback(engine::CTime::CCallbackTimer* pTimer, void* pUserData);
 			void UpdateConsole(bool visible);
 			void SetConsoleHeight(float ratio);
 
@@ -37,7 +36,7 @@ namespace engine
 			};
 
 			engine::CDebugFont m_debugFont;
-			engine::CCallbackTimer m_timer;
+			engine::CTime::CCallbackTimer m_timer;
 			uint32* m_pConsoleDisplay;
 			uint32 m_width;
 			uint32 m_height;

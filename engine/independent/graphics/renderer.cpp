@@ -266,7 +266,7 @@ namespace engine
 
 	//============================================================================
 
-	bool CRenderer::Callback(engine::CCallbackTimer* pTimer, void* pUserData)
+	bool CRenderer::Callback(engine::CTime::CCallbackTimer* pTimer, void* pUserData)
 	{
 		CRenderer* pThis = reinterpret_cast<CRenderer*>(pUserData);
 
