@@ -487,7 +487,7 @@ namespace engine
 				Callback m_pCallback;
 				void* const m_pUserData;
 				bool m_active;
-			}; // End [class CCallbakcTimer]
+			}; // End [class CCallbackTimer]
 			//========================================================================
 
 		public:
@@ -501,6 +501,13 @@ namespace engine
 
 			static void Sleep(uint32 microseconds);
 
+			const CTimeValue Update(void)
+			{
+				CTimeValue gameFrameTime = m_gameTimer.Update();
+
+				return gameFrameTime;
+			}
+			
 			CTimer& GameClock(void)
 			{
 				return m_gameTimer;

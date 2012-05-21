@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 
 	while (gc.GetElapsedTime() < target)
 	{
-		engine::CTime::CTimeValue tick = gc.Update();
+		engine::CTime::CTimeValue tick = engine::CTime::Get().Update();
 		ticker += tick;
 
 		if (ticker >= 1.0)
