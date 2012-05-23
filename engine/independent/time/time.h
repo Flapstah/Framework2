@@ -3,6 +3,10 @@
 
 //==============================================================================
 
+#include <vector>
+
+//==============================================================================
+
 namespace engine
 {
 	//============================================================================
@@ -418,8 +422,16 @@ namespace engine
 				public:
 				typedef bool (*Callback)(CCallbackTimer*, void*);
 
-				CCallbackTimer(CTime::CTimer& parent, float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
-					: CTimer(parent, maxFrameTime, scale)
+				CCallbackTimer(void)
+					: m_interval(0.0)
+					, m_pCallback(NULL)
+					, m_pUserData(NULL)
+					, m_active(false)
+				{
+				}
+
+				CCallbackTimer(float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+					: CTimer(maxFrameTime, scale)
 						, m_interval(intervalInSeconds)
 						 , m_pCallback(pCallback)
 						 , m_pUserData(pUserData)
@@ -428,8 +440,8 @@ namespace engine
 					Reset();
 				}
 
-				CCallbackTimer(float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
-					: CTimer(maxFrameTime, scale)
+				CCallbackTimer(CTime::CTimer& parent, float maxFrameTime, float scale, double intervalInSeconds, Callback pCallback, void* const pUserData)
+					: CTimer(parent, maxFrameTime, scale)
 						, m_interval(intervalInSeconds)
 						 , m_pCallback(pCallback)
 						 , m_pUserData(pUserData)
@@ -471,11 +483,6 @@ namespace engine
 					return m_interval;
 				}
 
-				void SetActive(bool active)
-				{
-					m_active = active;
-				}
-
 				bool IsActive(void) const
 				{
 					return m_active;
@@ -485,7 +492,9 @@ namespace engine
 				CTimeValue m_interval;
 				CTimeValue m_ticker;
 				Callback m_pCallback;
-				void* const m_pUserData;
+				// TODO: really want m_pUserData to be void* const but default copy
+				// constructor can't cope
+				void* m_pUserData;
 				bool m_active;
 			}; // End [class CCallbackTimer]
 			//========================================================================
@@ -508,6 +517,15 @@ namespace engine
 				return gameFrameTime;
 			}
 			
+			// Callback stuff
+			enum eConstants
+			{
+				INVALID_TIMER_ID = 0xffffffff
+			};
+
+			uint32 CreateCallbackTimer(float maxFrameTime, float scale, double intervalInSeconds, CTime::CCallbackTimer::Callback pCallback, void* const pUserData);
+			uint32 CreateCallbackTimer(CTime::CTimer& parent, float maxFrameTime, float scale, double intervalInSeconds, CTime::CCallbackTimer::Callback pCallback, void* const pUserData);
+
 			CTimer& GameClock(void)
 			{
 				return m_gameTimer;
@@ -524,6 +542,10 @@ namespace engine
 			void Initialise(void);
 			void Platform_Initialise(void);
 			const CTimeValue Platform_GetCurrentTime(void) const;
+
+			typedef std::vector<CCallbackTimer> TCallbackTimerVector;
+			TCallbackTimerVector m_callbackTimers;
+			uint32 CreateCallbackTimer(CTime::CCallbackTimer& timer);
 
 		protected:
 			CTimer m_gameTimer;

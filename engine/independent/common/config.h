@@ -13,6 +13,9 @@
 #define DEFAULT_WINDOW_TITLE "Framework Test"
 #define DEFAULT_FRAMERATE (60.0)
 
+#define CALLBACK_TIMER_POOL_SIZE (16)
+#define USE_DYNAMIC_CALLBACK_TIMER_POOL 0
+
 //==============================================================================
 #endif // End [!defined(__CONFIG_H__)]
 // [EOF]
