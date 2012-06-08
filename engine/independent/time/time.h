@@ -3,6 +3,7 @@
 
 //==============================================================================
 
+#include <list>
 #include <vector>
 
 //==============================================================================
@@ -520,11 +521,17 @@ namespace engine
 			// Callback stuff
 			enum eConstants
 			{
+				GAME_TIMER = 0,
 				INVALID_TIMER_ID = 0xffffffff
 			};
 
+			uint32 CreateTimer(float maxFrameTime, float scale);
+			uint32 CreateTimer(CTime::CTimer& parent, float maxFrameTime, float scale);
 			uint32 CreateCallbackTimer(float maxFrameTime, float scale, double intervalInSeconds, CTime::CCallbackTimer::Callback pCallback, void* const pUserData);
 			uint32 CreateCallbackTimer(CTime::CTimer& parent, float maxFrameTime, float scale, double intervalInSeconds, CTime::CCallbackTimer::Callback pCallback, void* const pUserData);
+			CTimer* GetTimer(uint32 timerID);
+			CCallbackTimer* GetCallbackTimer(uint32 timerID);
+			bool DestroyTimer(uint32 timerID);
 
 			CTimer& GameClock(void)
 			{
@@ -543,9 +550,31 @@ namespace engine
 			void Platform_Initialise(void);
 			const CTimeValue Platform_GetCurrentTime(void) const;
 
-			typedef std::vector<CCallbackTimer> TCallbackTimerVector;
-			TCallbackTimerVector m_callbackTimers;
-			uint32 CreateCallbackTimer(CTime::CCallbackTimer& timer);
+			struct STimerContainer
+			{
+				enum eType
+				{
+					eT_None,
+					eT_Timer,
+					eT_CallbackTimer,
+
+					eT_MAX
+				};
+
+				union
+				{
+					uint8 m_timer[sizeof(CTimer)];
+					uint8 m_callbackTimer[sizeof(CCallbackTimer)];
+				};
+
+				eType m_type;
+			};
+
+			typedef std::vector<STimerContainer> TTimerVector;
+			TTimerVector m_timers;
+			typedef std::list<uint32> TTimerUpdateOrder;
+			TTimerUpdateOrder m_timerUpdateOrder;
+			uint32 GetFreeTimerID(void);
 
 		protected:
 			CTimer m_gameTimer;
