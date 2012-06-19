@@ -305,13 +305,13 @@ namespace engine
 			//========================================================================
 			class CTimer
 			{
-				enum eDefaultValues
-				{
-					eDV_SCALE = 1,
-					eDV_RECIPROCALMAXFRAMETIME = 10
-				}; // End [enum eDefaultValues]
-
 				public:
+					enum eDefaultValues
+					{
+						eDV_SCALE = 1,
+						eDV_RECIPROCALMAXFRAMETIME = 10
+					}; // End [enum eDefaultValues]
+
 					CTimer(void)
 						: m_pParent(NULL)
 						, m_maxFrameTime(1.0f/eDV_RECIPROCALMAXFRAMETIME)
@@ -425,7 +425,7 @@ namespace engine
 
 				CCallbackTimer(void)
 					: m_interval(0.0)
-					, m_pCallback(NULL)
+						, m_pCallback(NULL)
 					, m_pUserData(NULL)
 					, m_active(false)
 				{
@@ -513,7 +513,7 @@ namespace engine
 
 			const CTimeValue Update(void)
 			{
-				CTimeValue gameFrameTime = m_gameTimer.Update();
+				CTimeValue gameFrameTime = GameTimer().Update();
 
 				return gameFrameTime;
 			}
@@ -533,9 +533,9 @@ namespace engine
 			CCallbackTimer* GetCallbackTimer(uint32 timerID);
 			bool DestroyTimer(uint32 timerID);
 
-			CTimer& GameClock(void)
+			CTimer& GameTimer(void)
 			{
-				return m_gameTimer;
+				return *GetTimer(GAME_TIMER);
 			}
 
 			const CTimeValue GetCurrentTime(void) const
@@ -552,7 +552,7 @@ namespace engine
 
 			struct STimerContainer
 			{
-				STimerContainer(void) {}
+				STimerContainer(void) : m_type(eT_None) {}
 				~STimerContainer(void)
 				{
 					switch (m_type)
@@ -590,9 +590,6 @@ namespace engine
 			typedef std::list<uint32> TTimerUpdateOrder;
 			TTimerUpdateOrder m_timerUpdateOrder;
 			uint32 GetFreeTimerID(void);
-
-		protected:
-			CTimer m_gameTimer;
 	}; // End [class CTime]
 
 	//============================================================================

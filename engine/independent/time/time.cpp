@@ -31,14 +31,21 @@ namespace engine
 	{
 		Platform_Initialise();
 
+		// Reserve initial timer pool and initialise
+		m_timers.reserve(TIMER_POOL_SIZE);
+		for (uint32 index = 0; index < TIMER_POOL_SIZE; ++index)
+		{
+			m_timers.push_back(STimerContainer());
+		}
+
 		// Make sure the game timer is reset to "now".  N.B. Can't do Reset() here
 		// because CTimer::Reset() for the game timer will call CTime::Get()...and
 		// we're currently in the constructor flow for the original CTime::Get()...
 		// which causes a segmentation fault when compiled with GCC (but not Visual
 		// Studio oddly).
-		m_gameTimer.Reset(GetCurrentTime());
-
-		m_timers.reserve(TIMER_POOL_SIZE);
+		uint32 gameTimerID = CreateTimer(1.0f/CTimer::eDV_RECIPROCALMAXFRAMETIME, CTimer::eDV_SCALE);
+		printf("[CTime::Initialise() : gameTimerID %d", gameTimerID);
+		GameTimer().Reset(GetCurrentTime());
 	}
 
 	//============================================================================
@@ -161,34 +168,29 @@ namespace engine
 
 	uint32 CTime::GetFreeTimerID(void)
 	{
-		uint32 timerID = INVALID_TIMER_ID;
-		bool addTimer = true;
+		uint32 timerID = 0;
 		bool indexFound = false;
 
-		if (m_timers.size() == TIMER_POOL_SIZE)
+		for (TTimerVector::iterator it = m_timers.begin(); it != m_timers.end(); ++it)
 		{
-#if USE_DYNAMIC_TIMER_POOL
-			printf("CTime::GetNextTimerIndex() : exeeded initial timer pool size (%d); consider increasing\n", TIMER_POOL_SIZE);
-			m_timers.reserve(m_timers.size()+1);
-#else
-			printf("CTime::GetNextTimerIndex() : maximum number of timers reached (%d); unable to create more\n", TIMER_POOL_SIZE);
-			addTimer = false;
-#endif // USE_DYNAMIC_CALLBACK_TIMER_POOL
+			STimerContainer& timerContainer = *it;
+			if (timerContainer.m_type == STimerContainer::eT_None)
+			{
+				indexFound = true;
+				break;
+			}
+			++timerID;
 		}
 
-		if (addTimer == true)
+		if (indexFound == false)
 		{
-			timerID = 0;
-			for (TTimerVector::iterator it = m_timers.begin(); it != m_timers.end(); ++it)
-			{
-				STimerContainer& timerContainer = *it;
-				if (timerContainer.m_type == STimerContainer::eT_None)
-				{
-					indexFound = true;
-					break;
-				}
-				++timerID;
-			}
+#if USE_DYNAMIC_TIMER_POOL
+			m_timers.push_back(STimerContainer());
+			indexFound = true;
+			printf("CTime::GetNextTimerIndex() : exeeded initial timer pool size (%d); consider increasing\n", m_timers.capacity());
+#else
+			printf("CTime::GetNextTimerIndex() : maximum number of timers reached (%d); unable to create more\n", TIMER_POOL_SIZE);
+#endif // USE_DYNAMIC_CALLBACK_TIMER_POOL
 		}
 
 		return (indexFound == true) ? timerID : INVALID_TIMER_ID;

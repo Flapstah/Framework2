@@ -11,7 +11,7 @@ namespace engine
 {
 	//============================================================================
 
-	extern uint64 g_platformTicksPerSecond;
+	extern int64 g_platformTicksPerSecond;
 
 	//============================================================================
 	
