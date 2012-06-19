@@ -82,7 +82,7 @@ namespace engine
 		if (id != INVALID_TIMER_ID)
 		{
 			STimerContainer& timerContainer = m_timers[id];
-			timerContainer.m_type = STimerContainer::eT_Timer;
+			timerContainer.m_type = STimerContainer::eT_CallbackTimer;
 			new(timerContainer.m_callbackTimer) CCallbackTimer(maxFrameTime, scale, intervalInSeconds, pCallback, pUserData);
 		}
 
@@ -98,7 +98,7 @@ namespace engine
 		if (id != INVALID_TIMER_ID)
 		{
 			STimerContainer& timerContainer = m_timers[id];
-			timerContainer.m_type = STimerContainer::eT_Timer;
+			timerContainer.m_type = STimerContainer::eT_CallbackTimer;
 			new(timerContainer.m_callbackTimer) CCallbackTimer(parent, maxFrameTime, scale, intervalInSeconds, pCallback, pUserData);
 		}
 
@@ -150,16 +150,7 @@ namespace engine
 		if (id < m_timers.size())
 		{
 			STimerContainer& timerContainer = m_timers[id];
-			switch (timerContainer.m_type)
-			{
-				case STimerContainer::eT_Timer:
-					reinterpret_cast<CTimer*>(&timerContainer.m_timer)->~CTimer();
-					break;
-				case STimerContainer::eT_CallbackTimer:
-					reinterpret_cast<CCallbackTimer*>(&timerContainer.m_callbackTimer)->~CCallbackTimer();
-					break;
-			}
-			timerContainer.m_type = STimerContainer::eT_None;
+			timerContainer.~STimerContainer();
 			destroyed = true;
 		}
 

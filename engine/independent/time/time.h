@@ -552,6 +552,21 @@ namespace engine
 
 			struct STimerContainer
 			{
+				STimerContainer(void) {}
+				~STimerContainer(void)
+				{
+					switch (m_type)
+					{
+						case eT_Timer:
+							reinterpret_cast<CTimer*>(&m_timer)->~CTimer();
+							break;
+						case eT_CallbackTimer:
+							reinterpret_cast<CCallbackTimer*>(&m_callbackTimer)->~CCallbackTimer();
+							break;
+					}
+					m_type = eT_None;
+				}
+
 				enum eType
 				{
 					eT_None,
