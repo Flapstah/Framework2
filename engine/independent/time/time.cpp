@@ -23,6 +23,26 @@ namespace engine
 
 	CTime::~CTime(void)
 	{
+		for (int32 index = m_timers.size()-1; index > GAME_TIMER; --index)
+		{
+			STimerContainer& timerContainer = m_timers[index];
+			switch (timerContainer.m_type)
+			{
+				case STimerContainer::eT_None:
+					break;
+				case STimerContainer::eT_Timer:
+					printf("CTime::~CTime() : timer ID %d has not been destroyed", index);
+					break;
+				case STimerContainer::eT_CallbackTimer:
+					printf("CTime::~CTime() : callback timer ID %d has not been destroyed", index);
+					break;
+				default:
+					printf("CTime::~CTime() : memory corruption for timer ID %d detected", index);
+					break;
+			}
+		}
+
+		m_timers.clear();
 	}
 
 	//============================================================================
@@ -44,7 +64,8 @@ namespace engine
 		// which causes a segmentation fault when compiled with GCC (but not Visual
 		// Studio oddly).
 		uint32 gameTimerID = CreateTimer(1.0f/CTimer::eDV_RECIPROCALMAXFRAMETIME, CTimer::eDV_SCALE);
-		printf("[CTime::Initialise() : gameTimerID %d", gameTimerID);
+		// TODO: need assert
+//		printf("[CTime::Initialise() : gameTimerID %d", gameTimerID);
 		GameTimer().Reset(GetCurrentTime());
 	}
 
