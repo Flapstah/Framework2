@@ -149,7 +149,8 @@ int main(int argc, char* argv[])
 	printf("Starting %.02f second test...\n", TEST_LENGTH);
 
 	engine::CTime::CTimeValue start = engine::CTime::Get().GetCurrentTime();
-	engine::CTime::CCallbackTimer ct(0.1f, 1.0f, 1.0, TimerCallback, NULL);
+	uint32 callbackTimerID = engine::CTime::Get().CreateCallbackTimer(0.1f, 1.0f, 1.0, TimerCallback, NULL);
+	engine::CTime::CCallbackTimer* pCallbackTimer = engine::CTime::Get().GetCallbackTimer(callbackTimerID);
 
 	uint32 xpos = 100;
 	xpos += renderer.Print(100, xpos, 0x00ffffff, 0, "Andrew");
@@ -160,15 +161,16 @@ int main(int argc, char* argv[])
 	renderer.Print(220, 100, 0x00ffffff, 0, "0123456789");
 	renderer.Print(230, 100, 0x00ffffff, 0, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
 
-	while (ct.IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
+	while (pCallbackTimer->IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
 	{
-		ct.Update();
+		pCallbackTimer->Update();
 		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
 		renderer.Update();
 	}
 
 	engine::CTime::CTimeValue finish = engine::CTime::Get().GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
+	engine::CTime::Get().DestroyTimer(callbackTimerID);
 	/////////////////////////////////////////////////////////////////////////////
 
 	/*

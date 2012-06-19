@@ -4,6 +4,9 @@
 
 //==============================================================================
 
+// TODO: Might be a good idea to have timer names (at least in debug) to help
+// track down problems with them, e.g. when you haven't destroyed one.
+
 namespace engine
 {
 	//============================================================================
