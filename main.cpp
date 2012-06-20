@@ -66,7 +66,7 @@ void TimeValueTest(engine::CTime::CTimeValue value)
 	float seconds;
 	value.GetTime(days, hours, minutes, seconds);
 
-	printf("%d days, %02u:%02u:%06.3fs\n", days, abs(hours), abs(minutes), fabs(seconds));
+	printf("%s%d days, %02u:%02u:%06.3fs\n", (value.GetTicks() < 0) ? "-" : "",  days, hours, minutes, seconds);
 }
 
 //==============================================================================
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CTimeValue tests
-	printf("sizeof(CTime::CTimeValue) is %u\n", static_cast<uint32>(sizeof(engine::CTime::CTimeValue)));
+	printf("sizeof(CTime::CTimeValue) is %u bytes\n", static_cast<uint32>(sizeof(engine::CTime::CTimeValue)));
 	printf("%" PRIu64 " ticks per second\n", engine::CTime::CTimeValue::TICKS_PER_SECOND);
 
 	engine::CTime::CTimeValue value(60.0);
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 	TimeValueTest(value);
 	value = -1.0;
 	TimeValueTest(value);
-	value = int64(DECLARE_64BIT(0xf000000000000000));
+	value = int64(DECLARE_64BIT(0x7fffffffffffffff));
 	TimeValueTest(value);
 	/////////////////////////////////////////////////////////////////////////////
 	*/
@@ -124,18 +124,18 @@ int main(int argc, char* argv[])
 	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CRealTimeClock test
-	engine::CTime::CTimer& gc = engine::CTime::Get().GameClock();
+	engine::CTime::CTimer& gt = engine::CTime::Get().GameTimer();
 	engine::CTime::CTimeValue target(TEST_LENGTH);
 	engine::CTime::CTimeValue ticker(0.0);
 
-	while (gc.GetElapsedTime() < target)
+	while (gt.GetElapsedTime() < target)
 	{
 		engine::CTime::CTimeValue tick = engine::CTime::Get().Update();
 		ticker += tick;
 
 		if (ticker >= 1.0)
 		{
-			printf("%fs elapsed\n", gc.GetElapsedTime().GetSeconds());
+			printf("%fs elapsed\n", gt.GetElapsedTime().GetSeconds());
 			ticker -= 1.0;
 		}
 	}

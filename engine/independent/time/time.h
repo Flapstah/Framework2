@@ -272,7 +272,12 @@ namespace engine
 
 					void GetTime(int32& days, int32& hours, int32& minutes, float& seconds)
 					{
+						// To prevent the user from having to test the signs of the parameters
+						// upon return, time is made absolute by two's complement.  The sign
+						// can always be tested by GetTicks()
 						int64 time = m_ticks;
+						int64 mask = m_ticks >> 63;
+						time = (time ^ mask) - mask;
 
 						int64 unit = TICKS_PER_SECOND*60*60*24; // ticks per day
 						days = time/unit;
