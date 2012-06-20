@@ -44,12 +44,12 @@ namespace engine
 	//============================================================================
 
 	CRenderer::CRenderer(uint32 width, uint32 height, const char* title, float frameRate)
-		: m_timer(0.1f, 1.0f, 0.0, CRenderer::Callback, this)
-		, m_width(width)
+		: m_width(width)
 		, m_height(height)
 		, m_consoleStartYPos(0)
 		, m_consoleCurrentYPos(0)
 		, m_consoleTargetYPos(0)
+		, m_timerID(CTime::INVALID_TIMER_ID)
 		, m_consoleVisibility(1.0f)
 		, m_displayScale(1.0f)
 		, m_title(title)
@@ -92,7 +92,7 @@ namespace engine
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-		m_timer.SetInterval(1.0/m_frameRate);
+		m_timerID = CTime::Get().CreateCallbackTimer(0.1f, 1.0f, 1.0/m_frameRate, CRenderer::Callback, this);
 	}
 
 	//============================================================================
@@ -104,14 +104,24 @@ namespace engine
 			delete[] m_pConsoleDisplay;
 			m_pConsoleDisplay = NULL;
 		}
+
+		CTime::Get().DestroyTimer(m_timerID);
 	}
 	
 	//============================================================================
 
 	bool CRenderer::Update(void)
 	{
-		m_timer.Update();
-		return m_timer.IsActive();
+		bool isActive = false;
+
+		CTime::CCallbackTimer* pCallbackTimer = CTime::Get().GetCallbackTimer(m_timerID);
+		if (pCallbackTimer != NULL)
+		{
+			pCallbackTimer->Update();
+			isActive = pCallbackTimer->IsActive();
+		}
+
+		return isActive;
 	}
 
 	//============================================================================

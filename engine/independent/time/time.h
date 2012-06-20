@@ -11,10 +11,6 @@
 namespace engine
 {
 	//============================================================================
-
-	class CTimer;
-
-	//============================================================================
 	// CTime
 	//============================================================================
 	class CTime
@@ -310,6 +306,8 @@ namespace engine
 			//========================================================================
 			class CTimer
 			{
+				friend class CTime;
+
 				public:
 					enum eDefaultValues
 					{
@@ -317,6 +315,7 @@ namespace engine
 						eDV_RECIPROCALMAXFRAMETIME = 10
 					}; // End [enum eDefaultValues]
 
+				protected:
 					CTimer(void)
 						: m_pParent(NULL)
 						, m_maxFrameTime(1.0f/eDV_RECIPROCALMAXFRAMETIME)
@@ -342,6 +341,7 @@ namespace engine
 					{
 					}
 
+				public:
 					CTimeValue GetCurrentTime(void) const
 					{
 						return m_timeNow;
@@ -423,11 +423,13 @@ namespace engine
 			//========================================================================
 			class CCallbackTimer : public CTimer
 			{
+				friend class CTime;
 				typedef CTime::CTimer PARENT;
 
 				public:
 				typedef bool (*Callback)(CCallbackTimer*, void*);
 
+				protected:
 				CCallbackTimer(void)
 					: m_interval(0.0)
 						, m_pCallback(NULL)
@@ -456,6 +458,11 @@ namespace engine
 					Reset();
 				}
 
+				~CCallbackTimer(void)
+				{
+				}
+
+				public:
 				// CTimer
 				virtual const CTime::CTimeValue Update(void)
 				{
