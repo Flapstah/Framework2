@@ -81,7 +81,9 @@ set(LIBS ${LIBS} ${GLFW_LIBRARY} ${OPENAL_LIBRARY} ${OPENGL_LIBRARY})
 # Platform sources
 set(PLATFORM_INDEPENDENT_SOURCES
  	engine/independent/common/console.cpp
+ 	engine/independent/common/filesystem.cpp
  	engine/independent/common/glfw.cpp
+ 	engine/independent/common/log.cpp
  	engine/independent/common/stdafx.cpp
  	engine/independent/common/system.cpp
 	engine/independent/graphics/debugfont.cpp
