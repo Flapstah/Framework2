@@ -3,8 +3,6 @@
 #include <GL/glfw.h>
 
 #include "time/time.h"
-//#include "time/realtimeclock.h"
-//#include "time/timer.h"
 
 #include "graphics/renderer.h"
 #include "input/keyboard.h"

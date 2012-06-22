@@ -220,8 +220,8 @@ namespace engine
 			TCommandMap m_commandMap;
 			TVariableMap m_variableMap;
 	}; // End [class CConsole]
-
 	//============================================================================
+
 } // End [namespace engine]
 
 //==============================================================================
