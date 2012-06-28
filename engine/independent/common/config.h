@@ -16,6 +16,11 @@
 #define TIMER_POOL_SIZE (16)
 #define USE_DYNAMIC_TIMER_POOL 0
 
+#define FILESYSTEM_MAX_HANDLES (16)
+#if defined(_DEBUG)
+#define FILESYSTEM_MAX_STORED_NAME_LENGTH (64)
+#endif // defined(_DEBUG)
+
 //==============================================================================
 #endif // End [!defined(__CONFIG_H__)]
 // [EOF]
