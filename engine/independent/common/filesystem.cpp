@@ -28,7 +28,7 @@ namespace engine
 			if (m_fileHandle[index].m_handle != NULL)
 			{
 #if defined(_DEBUG)
-				printf("[CFileSystem] file [%s] (handle %d) still open at exit\n", m_fileHandle[index].m_fileName, index);
+				printf("[CFileSystem] file [%s] (handle %d) still open at exit\n", m_fileHandle[index].m_name, index);
 #else
 				printf("[CFileSystem] file handle %d still open at exit\n", index);
 #endif // defined(_DEBUG)
@@ -90,8 +90,8 @@ namespace engine
 				if (m_fileHandle[index].m_handle != NULL)
 				{
 #if defined(_DEBUG)
-					strncpy(m_fileHandle[index].m_fileName, fileSpec, FILESYSTEM_MAX_STORED_NAME_LENGTH);
-					m_fileHandle[index].m_fileName[FILESYSTEM_MAX_STORED_NAME_LENGTH-1] = 0;
+					strncpy(m_fileHandle[index].m_name, fileSpec, FILESYSTEM_MAX_STORED_NAME_LENGTH);
+					m_fileHandle[index].m_name[FILESYSTEM_MAX_STORED_NAME_LENGTH-1] = 0;
 #endif // defined(_DEBUG)
 					handle = index;
 				}
@@ -100,6 +100,40 @@ namespace engine
 		}
 
 		return handle;
+	}
+
+	//============================================================================
+
+	bool CFileSystem::Write(uint32 handle, const void* pData, uint32 length)
+	{
+		bool written = false;
+
+		if (handle < FILESYSTEM_MAX_HANDLES)
+		{
+			if (m_fileHandle[handle].m_handle != NULL)
+			{
+				written = (fwrite(pData, length, 1, m_fileHandle[handle].m_handle) == 1);
+			}
+		}
+
+		return written;
+	}
+
+	//============================================================================
+
+	bool CFileSystem::Read(uint32 handle, void* pData, uint32 length)
+	{
+		bool read = false;
+
+		if (handle < FILESYSTEM_MAX_HANDLES)
+		{
+			if (m_fileHandle[handle].m_handle != NULL)
+			{
+				read = (fread(pData, length, 1, m_fileHandle[handle].m_handle) == 1);
+			}
+		}
+
+		return read;
 	}
 
 	//============================================================================

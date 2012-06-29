@@ -21,6 +21,8 @@
 #define FILESYSTEM_MAX_STORED_NAME_LENGTH (64)
 #endif // defined(_DEBUG)
 
+#define LOG_BUFFER_SIZE (1024)
+
 //==============================================================================
 #endif // End [!defined(__CONFIG_H__)]
 // [EOF]

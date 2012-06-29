@@ -25,6 +25,8 @@ namespace engine
 			static bool Rename(const char* oldFileName, const char* newFileName);
 
 			uint32 Open(const char* fileSpec, const char* mode);
+			bool Write(uint32 handle, const void* pData, uint32 length);
+			bool Read(uint32 handle, void* pData, uint32 length);
 			bool Flush(uint32 handle);
 			bool Close(uint32 handle);
 
@@ -38,7 +40,7 @@ namespace engine
 			{
 				FILE* m_handle;
 #if defined(_DEBUG)
-				char m_nameBuffer[FILESYSTEM_MAX_STORED_NAME_LENGTH];
+				char m_name[FILESYSTEM_MAX_STORED_NAME_LENGTH];
 #endif // defined(_DEBUG)
 			} m_fileHandle[FILESYSTEM_MAX_HANDLES];
 

@@ -9,6 +9,7 @@
 
 #include "common/console.h"
 #include "common/system.h"
+#include "common/log.h"
 
 //==============================================================================
 
@@ -98,6 +99,14 @@ int main(int argc, char* argv[])
 	// This will create and initialise the CSystem singleton
 	engine::CSystem::Get();
 
+	engine::CLog log("Game.log");
+	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_MESSAGE | engine::CLog::eLFB_TIMESTAMP, "This is a message with a timestamp\n");
+	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_INFO, "This is an information message\n");
+	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_WARN, "This is a warning message\n");
+	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_URGENT, "This is an urgent message\n");
+	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_ERROR, "This is an error message\n");
+	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_FATAL, "This is a fatal message\n");
+
 	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CTimeValue tests
@@ -142,6 +151,7 @@ int main(int argc, char* argv[])
 
 	/////////////////////////////////////////////////////////////////////////////
 	// callback timer and renderer test
+	/*
 	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
 
 	printf("Starting %.02f second test...\n", TEST_LENGTH);
@@ -169,6 +179,7 @@ int main(int argc, char* argv[])
 	engine::CTime::CTimeValue finish = engine::CTime::Get().GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	engine::CTime::Get().DestroyTimer(callbackTimerID);
+	*/
 	/////////////////////////////////////////////////////////////////////////////
 
 	/*

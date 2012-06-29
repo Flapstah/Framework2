@@ -1,6 +1,8 @@
 #include "common/stdafx.h"
 
 #include "common/system.h"
+#include "common/filesystem.h"
+#include "common/log.h"
 #include "time/time.h"
 
 //==============================================================================
@@ -27,6 +29,8 @@ namespace engine
 	{
 		// This will create and initialise the CTime singleton
 		CTime::Get();
+		// This will create and initialise the CFileSystem singleton
+		CFileSystem::Get();
 	}
 
 	//============================================================================
