@@ -17,17 +17,12 @@ namespace engine
 	class CSystem
 	{
 		public:
-			static CSystem& Get(void)
-			{
-				static CSystem instance;
-				return instance;
-			}
+			SINGLETON(CSystem)
 			~CSystem(void);
 
 			void LogCallstack(uint32 maxDepth);
 
 		protected:
-			CSystem(void);
 			void Initialise(void);
 			void Uninitialise(void);
 

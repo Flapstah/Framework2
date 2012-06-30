@@ -128,59 +128,62 @@ namespace engine
 
 	void CRenderer::UpdateConsole(bool visible)
 	{
-		int width, height;
-
-		// Get window size (and protect against height being 0)
-		glfwGetWindowSize(&width, &height);
-		height = (height > 0) ? height : 1;
-
-		// Set up view
-		glViewport(0, 0, width, height);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluOrtho2D(0.0, (GLdouble)width, (GLdouble)height, 0.0);
-
-		// Clear back buffer
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// Select texture
-		glEnable(GL_TEXTURE_2D);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		glBindTexture(GL_TEXTURE_2D, eTID_Console);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pConsoleDisplay);
-
-		int32 delta = m_consoleTargetYPos-m_consoleStartYPos;
-		m_consoleCurrentYPos = m_consoleStartYPos+(sinlerp(m_consoleVisibility)*delta);
-
-		if (m_consoleVisibility < 1.0f)
+		if (visible)
 		{
+			int width, height;
+
+			// Get window size (and protect against height being 0)
+			glfwGetWindowSize(&width, &height);
+			height = (height > 0) ? height : 1;
+
+			// Set up view
+			glViewport(0, 0, width, height);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			gluOrtho2D(0.0, (GLdouble)width, (GLdouble)height, 0.0);
+
+			// Clear back buffer
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			// Select texture
+			glEnable(GL_TEXTURE_2D);
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			glBindTexture(GL_TEXTURE_2D, eTID_Console);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pConsoleDisplay);
+
+			int32 delta = m_consoleTargetYPos-m_consoleStartYPos;
+			m_consoleCurrentYPos = m_consoleStartYPos+(sinlerp(m_consoleVisibility)*delta);
+
 			if (m_consoleVisibility < 1.0f)
 			{
-				m_consoleVisibility += 2.0/DEFAULT_FRAMERATE;
-				if (m_consoleVisibility > 1.0f)
+				if (m_consoleVisibility < 1.0f)
 				{
-					m_consoleVisibility = 1.0f;
+					m_consoleVisibility += 2.0/DEFAULT_FRAMERATE;
+					if (m_consoleVisibility > 1.0f)
+					{
+						m_consoleVisibility = 1.0f;
+					}
 				}
 			}
+
+			int32 x = 0;
+			int32 y = m_consoleCurrentYPos-height;
+
+			// Render textured quad
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2i(x, y);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2i(x, y + height);
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2i(x + width, y + height);
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2i(x + width, y);
+			glEnd();
+
+			glfwSwapBuffers();
+			glDisable(GL_TEXTURE_2D);
 		}
-
-		int32 x = 0;
-		int32 y = m_consoleCurrentYPos-height;
-
-		// Render textured quad
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2i(x, y);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2i(x, y + height);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2i(x + width, y + height);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2i(x + width, y);
-		glEnd();
-
-		glfwSwapBuffers();
-		glDisable(GL_TEXTURE_2D);
 	}
 	
 	//============================================================================
@@ -278,6 +281,8 @@ namespace engine
 
 	bool CRenderer::Callback(engine::CTime::CCallbackTimer* pTimer, void* pUserData)
 	{
+		IGNORE_PARAMETER(pTimer);
+
 		CRenderer* pThis = reinterpret_cast<CRenderer*>(pUserData);
 
 		pThis->UpdateConsole(true);

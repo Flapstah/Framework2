@@ -38,14 +38,6 @@ namespace engine
 
 	//============================================================================
 
-	CFileSystem& CFileSystem::Get(void)
-	{
-		static CFileSystem instance;
-		return instance;
-	}
-
-	//============================================================================
-
 	bool CFileSystem::Exists(const char* fileName)
 	{
 		bool exists = false;

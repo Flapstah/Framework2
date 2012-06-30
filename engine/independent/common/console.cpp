@@ -8,18 +8,6 @@ namespace engine
 {
 	//============================================================================
 
-	// The one instance of the console.
-	static CConsole g_Console;
-	CConsole* CConsole::s_this = &g_Console;
-
-	//============================================================================
-
-	CConsole::CConsole(void)
-	{
-	}
-
-	//============================================================================
-
 	CConsole::~CConsole(void)
 	{
 		if (!m_commandMap.empty())
@@ -67,13 +55,6 @@ namespace engine
 
 			m_variableMap.clear();
 		}
-	}
-
-	//============================================================================
-
-	CConsole* CConsole::Get(void)
-	{
-		return s_this;
 	}
 
 	//============================================================================
@@ -212,6 +193,7 @@ namespace engine
 	bool CConsole::ExecuteString(const char* command)
 	{
 		// TODO: implement
+		IGNORE_PARAMETER(command);
 		return false;
 	}
 

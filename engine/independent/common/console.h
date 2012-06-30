@@ -26,11 +26,9 @@ namespace engine
 	class CConsole
 	{
 		public:
-			CConsole(void);
+			SINGLETON(CConsole);
 			~CConsole(void);
 
-			static CConsole* Get(void);
-			
 			void Activate(bool activate);
 			bool IsActive(void) const;
 

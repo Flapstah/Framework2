@@ -1,4 +1,5 @@
 #include "common/stdafx.h"
+#include <stdarg.h>
 
 #include "common/log.h"
 #include "common/filesystem.h"
@@ -46,8 +47,8 @@ namespace engine
 		// N.B. Need a mutex here
 
 		static char buffer[LOG_BUFFER_SIZE];
-		uint32 index = 0;
-		uint32 charsWritten = 0;
+		int32 index = 0;
+		int32 charsWritten = 0;
 
 		if (m_flags & flags & eLFB_TIMESTAMP)
 		{

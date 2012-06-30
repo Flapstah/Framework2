@@ -153,7 +153,7 @@ namespace engine
 
 					bool operator==(double seconds) const
 					{
-						return (m_ticks == seconds*TICKS_PER_SECOND);
+						return (m_ticks == static_cast<int64>(seconds*TICKS_PER_SECOND));
 					}
 
 					bool operator==(int64 ticks) const
@@ -168,7 +168,7 @@ namespace engine
 
 					bool operator!=(double seconds) const
 					{
-						return (m_ticks != seconds*TICKS_PER_SECOND);
+						return (m_ticks != static_cast<int64>(seconds*TICKS_PER_SECOND));
 					}
 
 					bool operator!=(int64 ticks) const
@@ -513,12 +513,7 @@ namespace engine
 			//========================================================================
 
 		public:
-			// Get the singleton instance
-			static CTime& Get(void)
-			{
-				static CTime instance;
-				return instance;
-			}
+			SINGLETON(CTime);
 			~CTime(void);
 
 			static void Sleep(uint32 microseconds);
@@ -556,8 +551,6 @@ namespace engine
 			}
 
 		protected:
-			CTime(void);
-
 			void Initialise(void);
 			void Platform_Initialise(void);
 			const CTimeValue Platform_GetCurrentTime(void) const;
@@ -574,6 +567,9 @@ namespace engine
 							break;
 						case eT_CallbackTimer:
 							reinterpret_cast<CCallbackTimer*>(&m_callbackTimer)->~CCallbackTimer();
+							break;
+						default:
+							// Nothing to do here
 							break;
 					}
 					m_type = eT_None;

@@ -10,15 +10,9 @@ namespace engine
 	//============================================================================
 	class CFileSystem
 	{
-		protected:
-			CFileSystem(void);
-			CFileSystem(const CFileSystem& original);
-			CFileSystem& operator=(const CFileSystem& rhs);
-
 		public:
+			SINGLETON(CFileSystem);
 			~CFileSystem(void);
-
-			static CFileSystem& Get(void);
 
 			static bool Exists(const char* filename);
 			static bool Remove(const char* fileName);

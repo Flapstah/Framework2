@@ -26,7 +26,7 @@ namespace engine
 
 	CTime::~CTime(void)
 	{
-		for (int32 index = m_timers.size()-1; index > GAME_TIMER; --index)
+		for (uint32 index = m_timers.size()-1; index > GAME_TIMER; --index)
 		{
 			STimerContainer& timerContainer = m_timers[index];
 			switch (timerContainer.m_type)
@@ -145,7 +145,7 @@ namespace engine
 		if (timerID < m_timers.size())
 		{
 			STimerContainer& timerContainer = m_timers[timerID];
-			if (timerContainer.m_type = STimerContainer::eT_Timer)
+			if (timerContainer.m_type == STimerContainer::eT_Timer)
 			{
 				pTimer = reinterpret_cast<CTimer*>(&timerContainer.m_timer);
 			}
@@ -163,7 +163,7 @@ namespace engine
 		if (timerID < m_timers.size())
 		{
 			STimerContainer& timerContainer = m_timers[timerID];
-			if (timerContainer.m_type = STimerContainer::eT_CallbackTimer)
+			if (timerContainer.m_type == STimerContainer::eT_CallbackTimer)
 			{
 				pTimer = reinterpret_cast<CCallbackTimer*>(&timerContainer.m_callbackTimer);
 			}
