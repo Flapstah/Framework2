@@ -7,6 +7,17 @@
 
 //==============================================================================
 
+#define FATAL		ANSI_1SEQUENCE(ANSI_COLOUR(ANSI_YELLOW, ANSI_RED))
+#define ERROR		ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_RED))
+#define URGENT	ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_MAGENTA))
+#define WARN		ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_YELLOW))
+#define INFO		ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_GREEN))
+#define MESSAGE ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_BLACK))
+#define FIXME		ANSI_1SEQUENCE(ANSI_COLOUR(ANSI_YELLOW, ANSI_BLACK))
+#define RESET		ANSI_1SEQUENCE(ANSI_RESET_ALL)
+
+//==============================================================================
+
 namespace engine
 {
 	//============================================================================
@@ -50,6 +61,31 @@ namespace engine
 		int32 index = 0;
 		int32 charsWritten = 0;
 
+		switch (m_flags & flags & eLFS_ALL)
+		{
+			case eLFS_FATAL:
+				index += sprintf(&buffer[index], RESET FATAL);
+				break;
+			case eLFS_ERROR:
+				index += sprintf(&buffer[index], RESET ERROR);
+				break;
+			case eLFS_URGENT:
+				index += sprintf(&buffer[index], RESET URGENT);
+				break;
+			case eLFS_WARN:
+				index += sprintf(&buffer[index], RESET WARN);
+				break;
+			case eLFS_INFO:
+				index += sprintf(&buffer[index], RESET INFO);
+				break;
+			case eLFS_MESSAGE:
+				index += sprintf(&buffer[index], RESET MESSAGE);
+				break;
+			default:
+				index += sprintf(&buffer[index], RESET FIXME);
+				break;
+		}
+
 		if (m_flags & flags & eLFB_TIMESTAMP)
 		{
 			CTime::CTimeValue now = CTime::Get().GetCurrentTime();
@@ -60,31 +96,6 @@ namespace engine
 			index += sprintf(buffer, "[%02u:%02u:%06.3f] : ", hours, minutes, seconds);
 		}
 
-		switch (m_flags & flags & eLFS_ALL)
-		{
-			case eLFS_FATAL:
-				index += sprintf(&buffer[index], "[FATAL] : ");
-				break;
-			case eLFS_ERROR:
-				index += sprintf(&buffer[index], "[ERROR] : ");
-				break;
-			case eLFS_URGENT:
-				index += sprintf(&buffer[index], "[URGENT] : ");
-				break;
-			case eLFS_WARN:
-				index += sprintf(&buffer[index], "[WARN] : ");
-				break;
-			case eLFS_INFO:
-				index += sprintf(&buffer[index], "[INFO] : ");
-				break;
-			case eLFS_MESSAGE:
-				index += sprintf(&buffer[index], "[MESSAGE] : ");
-				break;
-			default:
-				index += sprintf(&buffer[index], "[**FIXME**] : ");
-				break;
-		}
-
 		va_list args;
 		va_start(args, format);
 		charsWritten = vsprintf(&buffer[index], format, args);
@@ -93,7 +104,7 @@ namespace engine
 		index += charsWritten;
 		if ((charsWritten < 0) || (index >= LOG_BUFFER_SIZE))
 		{
-			FATAL_ERROR("CLog::Print() : buffer over-run!\n");
+			FATAL_ERROR(FATAL "CLog::Print() : buffer over-run!" RESET "\n");
 		}
 
 		if (m_flags & flags & eLFD_FILE)
