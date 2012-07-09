@@ -12,7 +12,7 @@
 #define URGENT	ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_MAGENTA))
 #define WARN		ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_YELLOW))
 #define INFO		ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_GREEN))
-#define MESSAGE ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_BLACK))
+#define MESSAGE ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_DEFAULT_COLOUR))
 #define FIXME		ANSI_1SEQUENCE(ANSI_COLOUR(ANSI_YELLOW, ANSI_BLACK))
 #define RESET		ANSI_1SEQUENCE(ANSI_RESET_ALL)
 
@@ -37,7 +37,7 @@ namespace engine
 
 	CLog::~CLog(void)
 	{
-		Print(eLFD_RELEASE | eLFT_ALL | eLFS_INFO | eLFB_TIMESTAMP, "[EOF]\n");
+		Print(eLFD_RELEASE | eLFT_ALL | eLFS_MESSAGE | eLFB_TIMESTAMP, "[EOF]\n");
 
 		if (m_fileHandle != CFileSystem::eC_INVALID_FILE_HANDLE)
 		{
@@ -93,7 +93,7 @@ namespace engine
 			float seconds;
 
 			now.GetTime(days, hours, minutes, seconds);
-			index += sprintf(buffer, "[%02u:%02u:%06.3f] : ", hours, minutes, seconds);
+			index += sprintf(&buffer[index], "[%02u:%02u:%06.3f] : ", hours, minutes, seconds);
 		}
 
 		va_list args;
