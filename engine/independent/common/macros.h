@@ -15,29 +15,28 @@
 #endif // [defined(ENVIRONMENT32)]
 
 //------------------------------------------------------------------------------
+// Prevent copy constructor and assignment operator
+//------------------------------------------------------------------------------
+#define PREVENT_CLASS_COPY(_class_) \
+	private: \
+		_class_(const _class_&); \
+		_class_& operator = (const _class_&); \
+	public:
+
+//------------------------------------------------------------------------------
 // Create a singleton class with a public Get(), and private constructor, copy
 // constructor and assignment operator
 //------------------------------------------------------------------------------
 #define SINGLETON(_class_) \
 	private: \
 		_class_(void); \
-		_class_(const _class_&); \
-		_class_& operator=(const _class_&); \
+		PREVENT_CLASS_COPY(_class_) \
 	public: \
 		static _class_& Get(void) \
 		{ \
 			static _class_ instance; \
 			return instance; \
 		}
-
-//------------------------------------------------------------------------------
-// Prevent copy constructor and assignment operator
-//------------------------------------------------------------------------------
-#define PREVENT_CLASS_COPY(_class_) \
-	private: \
-	_class_(const _class_&); \
-	_class_& operator = (const _class_&) \
-	public:
 
 //------------------------------------------------------------------------------
 // Prevent instancing this class

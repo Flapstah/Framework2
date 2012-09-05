@@ -7,6 +7,11 @@
 
 //==============================================================================
 
+#if defined(ERROR)
+// Needed because Win32 defines ERROR in wingdi.h, included through windows.h
+#undef ERROR
+#endif // defined(ERROR)
+
 #define FATAL		ANSI_1SEQUENCE(ANSI_COLOUR(ANSI_YELLOW, ANSI_RED))
 #define ERROR		ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_RED))
 #define URGENT	ANSI_1SEQUENCE(ANSI_FOREGROUND(ANSI_MAGENTA))
