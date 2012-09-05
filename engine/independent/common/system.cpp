@@ -11,6 +11,12 @@ namespace engine
 {
 	//============================================================================
 
+#if INSTRUMENTED_CODE
+	CSystem::TInstrumentedCodeMap CSystem::s_instrumentedCode;
+#endif // INSTRUMENTED_CODE
+
+	//============================================================================
+
 	CSystem::CSystem(void)
 	{
 		Initialise();
@@ -21,6 +27,13 @@ namespace engine
 	CSystem::~CSystem(void)
 	{
 		Uninitialise();
+	}
+
+	//============================================================================
+
+	void CSystem::LogCallstack(uint32 maxDepth)
+	{
+		Platform_LogCallstack(maxDepth);
 	}
 
 	//============================================================================
@@ -41,10 +54,25 @@ namespace engine
 
 	//============================================================================
 
-	void CSystem::LogCallstack(uint32 maxDepth)
+#if INSTRUMENTED_CODE
+	void CSystem::Instrument(const char* name)
 	{
-		Platform_LogCallstack(maxDepth);
+		SInstrumentedData& data = s_instrumentedCode[name];
+		data.m_callCount += 1;
 	}
+
+	//============================================================================
+
+	void CSystem::LogInstrumentation(void)
+	{
+		for (TInstrumentedCodeMap::iterator it = s_instrumentedCode.begin(); it != s_instrumentedCode.end(); ++it)
+		{
+			SInstrumentedData& data = (*it).second;
+
+			printf("[%s] called %d times\n", (*it).first, data.m_callCount);
+		}
+	}
+#endif // INSTRUMENTED_CODE
 
 	//============================================================================
 } // End [namespace engine]

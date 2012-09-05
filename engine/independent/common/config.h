@@ -23,6 +23,8 @@
 
 #define LOG_BUFFER_SIZE (1024)
 
+#define INSTRUMENTED_CODE 1
+
 //==============================================================================
 #endif // End [!defined(__CONFIG_H__)]
 // [EOF]
