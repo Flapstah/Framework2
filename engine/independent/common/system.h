@@ -7,11 +7,6 @@
 #include "common/glfw.h"
 #endif // USE_GLFW
 
-#if INSTRUMENTED_CODE
-#include <map>
-#include <vector>
-#endif // INSTRUMENTED_CODE
-
 //==============================================================================
 
 namespace engine
@@ -33,27 +28,10 @@ namespace engine
 
 			void Platform_LogCallstack(uint32 maxDepth);
 
-#if INSTRUMENTED_CODE
-			static void Instrument(const char* name);
-			static void LogInstrumentation(void);
-#endif // INSTRUMENTED_CODE
-
 		protected:
 #if USE_GLFW
 			CGLFW m_glfw;
 #endif // USE_GLFW
-
-#if INSTRUMENTED_CODE
-			struct SInstrumentedData
-			{
-				SInstrumentedData(void) : m_callCount(0) {}
-
-				uint64 m_callCount;
-			};
-
-			typedef std::map<const char*, SInstrumentedData> TInstrumentedCodeMap;
-			static TInstrumentedCodeMap s_instrumentedCode;
-#endif // INSTRUMENTED_CODE
 
 	//============================================================================
 	}; // End [class CSystem]

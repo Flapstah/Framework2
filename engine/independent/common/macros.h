@@ -41,7 +41,7 @@
 //------------------------------------------------------------------------------
 // Prevent instancing this class
 //------------------------------------------------------------------------------
-#define PREVENT_CLASS_INSTANCE() virtual void YouCannotInstanceThisClass(void) = 0
+#define PREVENT_CLASS_INSTANCE virtual void YouCannotInstanceThisClass(void) = 0
 
 //------------------------------------------------------------------------------
 // Prevent compiler warnings for intentionally unreferenced parameters
