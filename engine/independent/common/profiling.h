@@ -22,13 +22,39 @@ namespace engine
 		PREVENT_CLASS_INSTANCE;
 
 		public:
-			struct SProfilingData
+			class CData
 			{
-				SProfilingData(void) : m_callCount(0) {}
+				CData(void)
+			 	{
+				}
 
-				uint64						m_callCount;
+				void AddSample(CTime::CTimeValue timeSlice)
+				{
+					uint32 frameID = CTime::Get().GetCurrentFrameID();
+					if (frameID == m_frameID)
+					{
+						m_timeSpentThisFrame += timeSlice;
+						m_callCountThisFrame += 1;
+					}
+					else
+					{
+						m_frameID = frameID;
+						m_timeSpentThisFrame = timeSlice;
+						m_callCountThisFrame = 1;
+					}
+
+					m_timeSpentLastCall = timeSlice;
+					m_timeSpentOverall += timeSlice;
+					++m_callCountOverall;
+				}
+
+				uint64						m_callCountOverall;
 				CTime::CTimeValue	m_timeSpentLastCall;	// no need to reset in initialiser list
+				CTime::CTimeValue	m_timeSpentThisFrame;	// no need to reset in initialiser list
 				CTime::CTimeValue	m_timeSpentOverall;		// no need to reset in initialiser list
+				SProfilingData*		m_pParent;
+				uint32						m_callCountThisFrame;
+				uint32						m_frameID;
 			};
 
 			static void AddCall(const char* name);
