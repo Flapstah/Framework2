@@ -521,6 +521,7 @@ namespace engine
 			const CTimeValue Update(void)
 			{
 				CTimeValue gameFrameTime = GameTimer().Update();
+				++m_frameID;
 
 				return gameFrameTime;
 			}
@@ -550,10 +551,16 @@ namespace engine
 				return Platform_GetCurrentTime();
 			}
 
+			uint32 GetCurrentFrameID(void) const
+			{
+				return m_frameID;
+			}
+
 		protected:
 			void Initialise(void);
 			void Platform_Initialise(void);
 			const CTimeValue Platform_GetCurrentTime(void) const;
+			uint32 GetFreeTimerID(void);
 
 			struct STimerContainer
 			{
@@ -597,7 +604,7 @@ namespace engine
 			TTimerVector m_timers;
 			typedef std::list<uint32> TTimerUpdateOrder;
 			TTimerUpdateOrder m_timerUpdateOrder;
-			uint32 GetFreeTimerID(void);
+			uint32 m_frameID;
 	}; // End [class CTime]
 
 	//============================================================================

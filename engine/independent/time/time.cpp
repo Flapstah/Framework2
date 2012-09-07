@@ -70,6 +70,7 @@ namespace engine
 		// TODO: need assert
 //		printf("[CTime::Initialise() : gameTimerID %d", gameTimerID);
 		GameTimer().Reset(GetCurrentTime());
+		m_frameID = 0;
 	}
 
 	//============================================================================
