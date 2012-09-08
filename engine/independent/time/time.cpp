@@ -66,7 +66,7 @@ namespace engine
 		// we're currently in the constructor flow for the original CTime::Get()...
 		// which causes a segmentation fault when compiled with GCC (but not Visual
 		// Studio oddly).
-		uint32 gameTimerID = CreateTimer(1.0f/CTimer::eDV_RECIPROCALMAXFRAMETIME, CTimer::eDV_SCALE);
+		/*uint32 gameTimerID =*/ CreateTimer(1.0f/CTimer::eDV_RECIPROCALMAXFRAMETIME, CTimer::eDV_SCALE);
 		// TODO: need assert
 //		printf("[CTime::Initialise() : gameTimerID %d", gameTimerID);
 		GameTimer().Reset(GetCurrentTime());
