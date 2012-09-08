@@ -23,6 +23,11 @@
 #endif // [defined(_WIN64)]
 #endif // [defined(_WIN32) || defined(_WIN64)]
 
+/* If we're not using GNU C, elide __attribute__ */
+#if !defined(__GNUC__)
+#define __attribute__(x)  /*NOTHING*/
+#endif // !defined(__GNUC__)
+
 //==============================================================================
 
 #endif // End [!defined(__PLATFORM_STDAFX_H__)]
