@@ -73,7 +73,9 @@ namespace engine
 			CLog(const char* fileName, uint32 flags = eLF_DEFAULT);
 			~CLog(void);
 
-			void Print(uint32 flags, const char* format, ...);
+			// N.B remember hidden 'this' pointer is parameter 1, so 'const char* format' is
+			// parameter 3 in __attribute__ specifier in Print() declaration below
+			void Print(uint32 flags, const char* format, ...) __attribute__((format(printf, 3, 4)));
 
 			uint32 SetFlags(uint32 flags);
 			uint32 ResetFlags(uint32 flags);
