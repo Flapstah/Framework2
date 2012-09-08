@@ -1,6 +1,6 @@
 #include "common/stdafx.h"
 
-#if INSTRUMENTED_CODE
+#if ENABLE_PROFILING
 
 #include "common/profiling.h"
 
@@ -14,19 +14,10 @@ namespace engine
 
 	//============================================================================
 
-	void CProfiling::AddCall(const char* name)
+	void CProfiling::AddSample(const char* name, const CTime::CTimeValue timeElapsed)
 	{
-		SProfilingData& data = s_profileDataMap[name];
-		data.m_callCount += 1;
-	}
-
-	//============================================================================
-
-	void CProfiling::AddTime(const char* name, const CTime::CTimeValue timeSpent)
-	{
-		SProfilingData& data = s_profileDataMap[name];
-		data.m_timeSpentLastCall = timeSpent;
-		data.m_timeSpentOverall += timeSpent;
+		CData& data = s_profileDataMap[name];
+		data.AddSample(timeElapsed);
 	}
 
 	//============================================================================
@@ -35,23 +26,19 @@ namespace engine
 	{
 		for (TProfilingDataMap::iterator it = s_profileDataMap.begin(); it != s_profileDataMap.end(); ++it)
 		{
-			SProfilingData& data = (*it).second;
+			CData& data = (*it).second;
 
-			if (data.m_timeSpentOverall.GetTicks() == 0)
-			{
-				printf("[%s] called %d times (no time logged)\n", (*it).first, data.m_callCount);
-			}
-			else
-			{
-				printf("[%s] called %d times, taking %.03f\n", (*it).first, data.m_callCount, data.m_timeSpentOverall.GetSeconds()*1000.0);
-			}
+			printf("%.03fms (%d) %.03fms (%" PRIu64 ") [%s]\n",
+				 	data.m_timeElapsedThisFrame.GetSeconds()*1000.0f, data.m_callCountThisFrame,
+					data.m_timeElapsedOverall.GetSeconds()*1000.0f, data.m_callCountOverall,
+					(*it).first);
 		}
 	}
 
 	//============================================================================
 } // End [namespace engine]
 
-#endif // INSTRUMENTED_CODE
+#endif // ENABLE_PROFILING
 
 //==============================================================================
 // [EOF]

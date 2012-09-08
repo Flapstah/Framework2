@@ -23,7 +23,7 @@
 
 #define LOG_BUFFER_SIZE (1024)
 
-#define INSTRUMENTED_CODE 1
+#define ENABLE_PROFILING 1
 
 //==============================================================================
 #endif // End [!defined(__CONFIG_H__)]

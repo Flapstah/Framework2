@@ -3,7 +3,7 @@
 
 //==============================================================================
 
-#if INSTRUMENTED_CODE
+#if ENABLE_PROFILING
 
 #include "time/time.h"
 
@@ -24,90 +24,74 @@ namespace engine
 		public:
 			class CData
 			{
-				CData(void)
-			 	{
-				}
-
-				void AddSample(CTime::CTimeValue timeSlice)
-				{
-					uint32 frameID = CTime::Get().GetCurrentFrameID();
-					if (frameID == m_frameID)
+				public:
+					CData(void)
 					{
-						m_timeSpentThisFrame += timeSlice;
-						m_callCountThisFrame += 1;
-					}
-					else
-					{
-						m_frameID = frameID;
-						m_timeSpentThisFrame = timeSlice;
-						m_callCountThisFrame = 1;
 					}
 
-					m_timeSpentLastCall = timeSlice;
-					m_timeSpentOverall += timeSlice;
-					++m_callCountOverall;
-				}
+					void AddSample(const CTime::CTimeValue& timeElapsed)
+					{
+						uint32 frameID = CTime::Get().GetCurrentFrameID();
 
-				uint64						m_callCountOverall;
-				CTime::CTimeValue	m_timeSpentLastCall;	// no need to reset in initialiser list
-				CTime::CTimeValue	m_timeSpentThisFrame;	// no need to reset in initialiser list
-				CTime::CTimeValue	m_timeSpentOverall;		// no need to reset in initialiser list
-				SProfilingData*		m_pParent;
-				uint32						m_callCountThisFrame;
-				uint32						m_frameID;
+						if (frameID == m_frameID)
+						{
+							m_timeElapsedThisFrame += timeElapsed;
+							m_callCountThisFrame += 1;
+						}
+						else
+						{
+							m_frameID = frameID;
+							m_timeElapsedThisFrame = timeElapsed;
+							m_callCountThisFrame = 1;
+						}
+
+						m_timeElapsedLastCall = timeElapsed;
+						m_timeElapsedOverall += timeElapsed;
+						++m_callCountOverall;
+					}
+
+					uint64						m_callCountOverall;
+					CTime::CTimeValue	m_timeElapsedLastCall;	// no need to reset in initialiser list
+					CTime::CTimeValue	m_timeElapsedThisFrame;	// no need to reset in initialiser list
+					CTime::CTimeValue	m_timeElapsedOverall;		// no need to reset in initialiser list
+					CData*		m_pParent;
+					uint32						m_callCountThisFrame;
+					uint32						m_frameID;
 			};
 
-			static void AddCall(const char* name);
-			static void AddTime(const char* name, const CTime::CTimeValue timeSpent);
-
+			static void AddSample(const char* name, const CTime::CTimeValue timeElapsed);
 			static void LogProfilingData(void);
 
-			typedef std::map<const char*, SProfilingData> TProfilingDataMap;
+			typedef std::map<const char*, CData> TProfilingDataMap;
 			static TProfilingDataMap s_profileDataMap;
 	}; // End [class CProfiling]
 
 	//============================================================================
 
-	class CProfileCallCount
+	class CScopedProfile
 	{
 		public:
-			CProfileCallCount(const char* name)
-		 	{
-			 	CProfiling::AddCall(name);
-		 	}
-
-			~CProfileCallCount(void)
-		 	{
-			}
-	}; // End [class CProfileCallCount]
-
-	//============================================================================
-
-	class CProfileElapsedTime
-	{
-		public:
-			CProfileElapsedTime(const char* name)
+			CScopedProfile(const char* name)
 			 	: m_name(name)
 		 	{
-			 	CProfiling::AddCall(name);
 			 	m_timeElapsed -= CTime::Get().GetCurrentTime();
 		 	}
 
-			~CProfileElapsedTime(void)
+			~CScopedProfile(void)
 		 	{
 			 	m_timeElapsed += CTime::Get().GetCurrentTime();
-			 	CProfiling::AddTime(m_name, m_timeElapsed);
+				CProfiling::AddSample(m_name, m_timeElapsed);
 		 	}
 
 		protected:
 			const char*				m_name;
 			CTime::CTimeValue	m_timeElapsed;
-	}; // End [class CProfileElapsedTime]
+	}; // End [class CScopedProfile]
 
 	//============================================================================
 } // End [namespace engine]
 
-#endif // INSTRUMENTED_CODE
+#endif // ENABLE_PROFILING
 
 //==============================================================================
 #endif // !defined(__PROFILING_H__)
