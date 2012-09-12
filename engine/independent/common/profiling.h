@@ -12,6 +12,11 @@
 
 //==============================================================================
 
+#define PROFILE(_name_) engine::CScopedProfile scopedProfile(_name_)
+#define LOG_PROFILING engine::CProfiling::LogProfilingData()
+
+//==============================================================================
+
 namespace engine
 {
 	//============================================================================
@@ -26,6 +31,10 @@ namespace engine
 			{
 				public:
 					CData(void)
+						: m_callCountOverall(0)
+						, m_callCountThisFrame(0)
+						, m_pParent(NULL)
+						, m_frameID(0)
 					{
 					}
 
@@ -54,7 +63,7 @@ namespace engine
 					CTime::CTimeValue	m_timeElapsedLastCall;	// no need to reset in initialiser list
 					CTime::CTimeValue	m_timeElapsedThisFrame;	// no need to reset in initialiser list
 					CTime::CTimeValue	m_timeElapsedOverall;		// no need to reset in initialiser list
-					CData*		m_pParent;
+					CData*						m_pParent;
 					uint32						m_callCountThisFrame;
 					uint32						m_frameID;
 			};
@@ -90,6 +99,11 @@ namespace engine
 
 	//============================================================================
 } // End [namespace engine]
+
+#else
+
+#define PROFILE(_name_) /* elide */
+#define LOG_PROFILING /* elide */
 
 #endif // ENABLE_PROFILING
 
