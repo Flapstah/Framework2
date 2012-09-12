@@ -10,6 +10,7 @@
 #include "common/console.h"
 #include "common/system.h"
 #include "common/log.h"
+#include "common/profiling.h"
 
 //==============================================================================
 
@@ -99,13 +100,19 @@ int main(int argc, char* argv[])
 	// This will create and initialise the CSystem singleton
 	engine::CSystem::Get();
 
-	engine::CLog log("Game.log");
-	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_MESSAGE | engine::CLog::eLFB_TIMESTAMP, "This is a message with a timestamp\n");
-	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_INFO, "This is an information message\n");
-	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_WARN, "This is a warning message\n");
-	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_URGENT, "This is an urgent message\n");
-	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_ERROR, "This is an error message\n");
-	log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_FATAL, "This is a fatal message\n");
+	{
+		PROFILE("main");
+
+		engine::CLog log("Game.log");
+		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_MESSAGE | engine::CLog::eLFB_TIMESTAMP, "This is a message with a timestamp\n");
+		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_INFO, "This is an information message\n");
+		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_WARN, "This is a warning message\n");
+		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_URGENT, "This is an urgent message\n");
+		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_ERROR, "This is an error message\n");
+		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_FATAL, "This is a fatal message\n");
+	}
+
+	LOG_PROFILING;
 
 	/*
 	/////////////////////////////////////////////////////////////////////////////
