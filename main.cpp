@@ -100,9 +100,10 @@ int main(int argc, char* argv[])
 	// This will create and initialise the CSystem singleton
 	engine::CSystem::Get();
 
+	/*
+	/////////////////////////////////////////////////////////////////////////////
+	// CLog tests
 	{
-		PROFILE("main");
-
 		engine::CLog log("Game.log");
 		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_MESSAGE | engine::CLog::eLFB_TIMESTAMP, "This is a message with a timestamp\n");
 		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_INFO, "This is an information message\n");
@@ -111,6 +112,7 @@ int main(int argc, char* argv[])
 		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_ERROR, "This is an error message\n");
 		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_FATAL, "This is a fatal message\n");
 	}
+	*/
 
 	/*
 	/////////////////////////////////////////////////////////////////////////////
@@ -156,7 +158,6 @@ int main(int argc, char* argv[])
 
 	/////////////////////////////////////////////////////////////////////////////
 	// callback timer and renderer test
-	/*
 	engine::CRenderer renderer(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_FRAMERATE);
 
 	printf("Starting %.02f second test...\n", TEST_LENGTH);
@@ -166,25 +167,32 @@ int main(int argc, char* argv[])
 	engine::CTime::CCallbackTimer* pCallbackTimer = engine::CTime::Get().GetCallbackTimer(callbackTimerID);
 
 	uint32 xpos = 100;
-	xpos += renderer.Print(100, xpos, 0x00ffffff, 0, "Andrew");
-	xpos += renderer.Print(100, xpos, 0x00ffffff, 0, " Catlender");
+	xpos += renderer.Print(250, xpos, 0x00ffffff, 0, "Andrew");
+	xpos += renderer.Print(250, xpos, 0x00ffffff, 0, " Catlender");
 
-	renderer.Print(200, 100, 0x00ffffff, 0, "THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG");
-	renderer.Print(210, 100, 0x00ffffff, 0, "the quick brown fox jumped over the lazy dog");
-	renderer.Print(220, 100, 0x00ffffff, 0, "0123456789");
-	renderer.Print(230, 100, 0x00ffffff, 0, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
+	renderer.Print(300, 100, 0x00ffffff, 0, "THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG");
+	renderer.Print(310, 100, 0x00ffffff, 0, "the quick brown fox jumped over the lazy dog");
+	renderer.Print(320, 100, 0x00ffffff, 0, "0123456789");
+	renderer.Print(330, 100, 0x00ffffff, 0, " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz");
 
 	while (pCallbackTimer->IsActive() && !engine::CKeyboard::IsKeyPressed(GLFW_KEY_ESC))
 	{
+		PROFILE("main");
+
+		engine::CTime::CTimeValue tick = engine::CTime::Get().Update();
 		pCallbackTimer->Update();
-		if (engine::CKeyboard::IsKeyPressed('`')) renderer.ActivateConsole(!renderer.IsConsoleActive());
+
+		if (engine::CKeyboard::IsKeyPressed('`'))
+		{
+			renderer.ActivateConsole(!renderer.IsConsoleActive());
+		}
+
 		renderer.Update();
 	}
 
 	engine::CTime::CTimeValue finish = engine::CTime::Get().GetCurrentTime();
 	printf("Total elapsed time %fs\n", (finish-start).GetSeconds());
 	engine::CTime::Get().DestroyTimer(callbackTimerID);
-	*/
 	/////////////////////////////////////////////////////////////////////////////
 
 	/*
