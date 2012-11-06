@@ -112,8 +112,6 @@ int main(int argc, char* argv[])
 		log.Print(engine::CLog::eLFD_FILE | engine::CLog::eLFT_APPLICATION | engine::CLog::eLFS_FATAL, "This is a fatal message\n");
 	}
 
-	LOG_PROFILING;
-
 	/*
 	/////////////////////////////////////////////////////////////////////////////
 	// CTimeValue tests
@@ -250,6 +248,8 @@ int main(int argc, char* argv[])
 	UNREGISTER_CONSOLE_VARIABLE(test_uint64);
 	/////////////////////////////////////////////////////////////////////////////
 	*/
+
+	LOG_PROFILING;
 
 	printf("All done.\n");
 
