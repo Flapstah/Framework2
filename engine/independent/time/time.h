@@ -320,6 +320,7 @@ namespace engine
 						: m_pParent(NULL)
 						, m_maxFrameTime(1.0f/eDV_RECIPROCALMAXFRAMETIME)
 						, m_scale(eDV_SCALE)
+						, m_paused(false)
 					{
 					}
 
@@ -327,6 +328,7 @@ namespace engine
 						: m_pParent(NULL)
 						, m_maxFrameTime(maxFrameTime)
 						, m_scale(scale)
+						, m_paused(false)
 					{
 					}
 
@@ -334,10 +336,11 @@ namespace engine
 						: m_pParent(&parent)
 						, m_maxFrameTime(maxFrameTime)
 						, m_scale(scale)
+						, m_paused(false)
 					{
 					}
 
-					~CTimer(void)
+					virtual ~CTimer(void)
 					{
 					}
 
@@ -377,20 +380,34 @@ namespace engine
 						return m_scale;
 					}
 
-					// TODO: deal with pausing
-
-					const CTimeValue Update(void)
+					void Pause(bool pause)
 					{
-						m_timeLast = m_timeNow;
-						m_timeNow = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetCurrentTime();
+						m_paused = pause;
 
-						CTimeValue frameTime = GetFrameTime();
-						if (frameTime.GetSeconds() > m_maxFrameTime)
+						if (!m_paused)
 						{
-							m_timeLast = m_timeNow-CTimeValue(m_maxFrameTime);
+							m_timeNow = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetCurrentTime();
+						}
+					}
+
+					virtual const CTimeValue Update(void)
+					{
+						CTimeValue frameTime;
+
+						if (m_paused != true)
+						{
+							m_timeLast = m_timeNow;
+							m_timeNow = (m_pParent == NULL) ? CTime::Get().GetCurrentTime() : m_pParent->GetCurrentTime();
+							frameTime = GetFrameTime();
+
+							if (frameTime.GetSeconds() > m_maxFrameTime)
+							{
+								m_timeLast = m_timeNow-CTimeValue(m_maxFrameTime);
+							}
+
+							m_timeElapsed += frameTime;
 						}
 
-						m_timeElapsed += frameTime;
 						return frameTime;
 					}
 
@@ -432,7 +449,7 @@ namespace engine
 				protected:
 				CCallbackTimer(void)
 					: m_interval(0.0)
-						, m_pCallback(NULL)
+					, m_pCallback(NULL)
 					, m_pUserData(NULL)
 					, m_active(false)
 				{
@@ -458,7 +475,7 @@ namespace engine
 					Reset();
 				}
 
-				~CCallbackTimer(void)
+				virtual ~CCallbackTimer(void)
 				{
 				}
 
