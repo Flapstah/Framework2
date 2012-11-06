@@ -444,7 +444,7 @@ namespace engine
 				typedef CTime::CTimer PARENT;
 
 				public:
-				typedef bool (*Callback)(CCallbackTimer*, void*);
+				typedef bool (*Callback)(CCallbackTimer*, void* const);
 
 				protected:
 				CCallbackTimer(void)
@@ -522,9 +522,7 @@ namespace engine
 				CTimeValue m_interval;
 				CTimeValue m_ticker;
 				Callback m_pCallback;
-				// TODO: really want m_pUserData to be void* const but default copy
-				// constructor can't cope
-				void* m_pUserData;
+				void* const m_pUserData;
 				bool m_active;
 			}; // End [class CCallbackTimer]
 			//========================================================================
