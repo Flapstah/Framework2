@@ -42,7 +42,7 @@ namespace engine
 
 	CLog::~CLog(void)
 	{
-		Print(eLFD_RELEASE | eLFT_ALL | eLFS_MESSAGE | eLFB_TIMESTAMP, "[EOF]\n");
+		Print(eLFD_RELEASE | eLFT_ALL | eLFS_MESSAGE | eLFB_TIMESTAMP, "[EOF]" RESET "\n");
 
 		if (m_fileHandle != CFileSystem::eC_INVALID_FILE_HANDLE)
 		{
